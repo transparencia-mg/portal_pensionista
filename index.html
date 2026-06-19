@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Pensionistas IPSEMG - Governo de Minas Gerais</title>
+    <link rel="icon" href="data:,">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        :root {
+            --primary-dark:     #1a3a5c;
+            --primary-darker:   #0f2a44;
+            --accent-red:       #b93c42;
+            --accent-bright:    #db233f;
+            --background-light: #f5f7fa;
+            --success-green:    #28a745;
+            --warning-yellow:   #ffc107;
+            --info-blue:        #17a2b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; overflow-x: hidden; margin: 0; padding: 0; height: auto; min-height: auto; }
+        body {
+            font-family: 'Montserrat', Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-light);
+            padding-bottom: 15px;
+            overflow-x: hidden;
+            min-height: auto;
+            height: auto;
+            position: relative;
+        }
+        body, button, input, select, textarea, span, div { font-family: 'Montserrat', sans-serif !important; }
+        .material-icons { font-family: 'Material Icons' !important; font-size: 14px; vertical-align: middle; }
+
+        .main-container { height: auto; min-height: auto; overflow: visible; position: relative; }
+        .container-fluid { width: 100%; max-width: 88% !important; padding: 0 40px; margin: 0; height: auto; }
+        .dashboard-container { width: 100%; max-width: 100%; padding: 0 40px; margin: 0 auto; height: auto; }
+        .tab-content, .tab-pane { width: 100%; height: auto; min-height: auto; overflow: visible; }
+        .table-container { height: auto; min-height: auto; overflow: visible; position: relative; }
+        .iframe-mode { overflow: visible !important; }
+
+        /* Data de atualização */
+        .data-atualizacao-container { display: flex; justify-content: left; align-items: center; margin: 15px 0; }
+        .data-atualizacao-box {
+            background: transparent !important;
+            border-radius: 8px; padding: 8px 15px;
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; color: var(--primary-dark); font-weight: 600; box-shadow: none;
+        }
+        .data-atualizacao-box i { font-size: 14px; color: var(--accent-red); }
+
+        /* Filtros */
+        .filter-container {
+            background: white; border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            padding: 20px; margin-bottom: 20px; width: 100%;
+        }
+        .filter-label { font-size: 13px; font-weight: 600; color: #1a3a5c; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .filter-label i { font-size: 14px; color: var(--accent-red); }
+        .form-control, .form-select {
+            border: 2px solid #e9ecef; border-radius: 6px;
+            padding: 10px 12px; font-size: 13px;
+            transition: all 0.3s ease; height: auto; width: 100%;
+        }
+        .form-control:focus, .form-select:focus { border-color: var(--accent-red); box-shadow: 0 0 0 2px rgba(185,60,66,0.15); }
+        .modern-select {
+            border: 1.5px solid #dfe5ec !important; border-radius: 8px !important;
+            padding: 10px 12px !important; font-size: 13px !important;
+            height: 42px !important; line-height: 1.5 !important;
+            background-color: #fff; transition: all 0.2s ease; width: 100%;
+        }
+        .modern-select:focus { border-color: #1a3a5c !important; box-shadow: 0 0 0 2px rgba(26,58,92,0.1); }
+        .filters-row { display: flex; gap: 15px; width: 100%; flex-wrap: wrap; margin-bottom: 12px; }
+        .filter-group { flex: 1; min-width: 140px; }
+        .botoes-abaixo { margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .consulta-filters-row { display: flex; flex-wrap: wrap; gap: 15px; width: 100%; }
+        .consulta-filter-group { flex: 1 1 calc(33.333% - 15px); min-width: 200px; }
+        .consulta-buttons-row { display: flex; gap: 10px; width: 100%; margin-top: 15px; justify-content: flex-start; flex-wrap: wrap; }
+
+        /* Cards métricas */
+        .metric-card {
+            background: white; border-radius: 8px;
+            border: 1px solid #e5e9ef;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            overflow: hidden; height: 100%;
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+        .metric-card:hover { box-shadow: 0 8px 24px rgba(26,58,92,0.13); transform: translateY(-2px); }
+        .metric-header {
+            background: #20445d; color: white;
+            font-size: 13px; font-weight: 600;
+            padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .metric-body { padding: 12px 15px; }
+        .metric-value { font-size: 20px; font-weight: 700; color: #171c21; }
+        .metric-sublabel { font-size: 10px; color: #94a3b8; font-weight: 500; margin-top: 2px; }
+
+        /* Gráficos */
+        .chart-container {
+            background: white; border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            margin-bottom: 20px; overflow: hidden;
+        }
+        .chart-container canvas { max-width: 100%; }
+        .chart-header { background: #20445d; color: white; padding: 12px 16px; margin: 0; }
+        .chart-title { font-size: 14px; font-weight: 600; color: white; margin: 0; }
+        .chart-wrapper { height: 280px; padding: 10px 15px; width: 100%; }
+        .chart-pizza-layout { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 10px 20px; }
+        .chart-pizza-box { width: 200px; height: 200px; flex-shrink: 0; }
+        .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; font-size: 8px; width: 100%; padding: 4px 10px 10px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-color { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+
+        /* Tabelas */
+        .table-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
+            color: white; padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .table-title { font-size: 13px; font-weight: 600; margin: 0; }
+        .table-badge { background: #1a3a5c; color: white; padding: 5px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+        .table-fixed-header-container { position: relative; overflow: auto; width: 100%; max-height: 600px; }
+        .table-fixed-header-container table thead th {
+            background-color: #54697b !important; color: white !important;
+            position: sticky; top: 0; z-index: 10;
+            font-weight: 600; padding: 12px 10px; font-size: 12px;
+            text-transform: uppercase; white-space: nowrap;
+        }
+        .table { width: 100%; font-size: 12px; border-collapse: collapse; table-layout: auto; }
+        .table th, .table td { border: 1px solid #d6dee6; }
+        .table thead th {
+            background-color: #54697b !important; color: white !important;
+            font-weight: 600; font-size: 12px; padding: 12px 10px;
+            text-transform: uppercase; border: 1px solid #d6dee6;
+            cursor: pointer; user-select: none;
+        }
+        .table thead th:first-child { border-top-left-radius: 8px; }
+        .table thead th:last-child  { border-top-right-radius: 8px; }
+        .table thead th:hover { background-color: #3d5566 !important; }
+        .table tbody tr { background-color: #ffffff; }
+        .table tbody td { padding: 10px 10px; vertical-align: middle; border-bottom: 1px solid #f1f1f1; font-size: 12px; }
+        .table tbody tr:hover { background-color: rgba(41,67,90,0.04); }
+        .table tfoot { position: sticky; bottom: 0; z-index: 20; }
+        .table tfoot tr, .table tfoot td { background-color: #dfe3e8 !important; font-weight: 700; font-size: 12px; }
+        .table-responsive { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .sortable-header { cursor: pointer; position: relative; padding-right: 22px !important; }
+        .sortable-header:hover { background-color: #3d5566 !important; }
+        .sortable-header i { font-size: 13px; position: absolute; right: 5px; top: 50%; transform: translateY(-50%); opacity: 0.8; }
+        .orgao-link, .nome-link { color: #006a82; text-decoration: none; font-weight: 400; cursor: pointer; }
+        .orgao-link:hover, .nome-link:hover { color: var(--accent-red); text-decoration: underline; }
+        .text-right { text-align: right; }
+
+        /* Botões */
+        .btn-pesquisa {
+            background: linear-gradient(to right, #20445d, #20445d);
+            border: none; padding: 0 16px; font-weight: 600;
+            border-radius: 6px; transition: all 0.3s ease; font-size: 13px;
+            color: white; display: inline-flex; align-items: center; gap: 4px;
+            cursor: pointer; height: 36px; white-space: nowrap;
+        }
+        .btn-pesquisa:hover { background: linear-gradient(to right, var(--accent-red), #a32c32); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(185,60,66,0.2); color: white; }
+        .btn-secondary-custom {
+            background: white; border: 2px solid var(--primary-darker);
+            color: var(--primary-darker); padding: 0 16px;
+            font-weight: 600; font-size: 13px; border-radius: 6px;
+            transition: all 0.3s ease; display: inline-flex; align-items: center;
+            gap: 4px; cursor: pointer; height: 36px; white-space: nowrap; text-decoration: none !important;
+        }
+        .btn-secondary-custom:hover { background-color: #132837 !important; color: white !important; border-color: #132837 !important; }
+        .btn-export {
+            appearance: none; -webkit-appearance: none;
+            background: transparent !important; border: 1px solid #d6dee6;
+            color: #1a3a5c; padding: 0 14px; border-radius: 6px;
+            font-size: 13px; font-weight: 500; display: inline-flex;
+            align-items: center; gap: 4px; height: 32px; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-export i { font-size: 14px !important; }
+        button.btn-export:hover, a.btn-export:hover { background-color: #1a3a5c !important; border-color: #1a3a5c !important; color: #ffffff !important; }
+        .btn-action {
+            padding: 4px; border-radius: 7px; border: 1.5px solid #1a3a5c;
+            background-color: #ffffff; color: #1a3a5c; width: 32px; height: 30px;
+            display: inline-flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease; cursor: pointer;
+        }
+        .btn-action:hover { background-color: #1a3a5c; color: white; }
+
+        /* Abas */
+        .nav-tabs-container { background: transparent; padding: 10px 0; margin-top: 15px; margin-bottom: 15px; width: 100%; }
+        .nav-tabs { border: none !important; gap: 10px; width: 100%; flex-wrap: wrap; }
+        .nav-tabs .nav-link {
+            border: none !important; background: #ffffff !important;
+            border-radius: 10px !important; padding: 8px 18px !important;
+            font-weight: 500; font-size: 13px; color: #1a3a5c !important;
+            display: inline-flex !important; align-items: center; gap: 6px;
+            transition: all .25s ease; white-space: nowrap;
+        }
+        .nav-tabs .nav-link:hover { background: #e6e9ed !important; }
+        .nav-tabs .nav-link.active { background: #234c63 !important; color: #fff !important; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .nav-tabs .material-icons { font-size: 14px !important; }
+
+        /* Modal */
+        body.modal-open { overflow: hidden !important; position: static !important; padding-right: 0 !important; }
+        .modal { position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; overflow-x: hidden !important; overflow-y: auto !important; z-index: 10500 !important; }
+        .modal-backdrop { position: fixed !important; top: 0 !important; left: 0 !important; z-index: 10400 !important; }
+        .modal-dialog { margin: 1.75rem auto !important; max-height: calc(100vh - 3.5rem); }
+        .modal-dialog-scrollable .modal-content { max-height: calc(100vh - 3.5rem) !important; overflow: hidden; }
+        .modal-dialog-scrollable .modal-body { overflow-y: auto !important; }
+        .modal-full-custom { max-width: 860px !important; width: 92% !important; }
+        .modal-creative .modal-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
+            color: white !important; padding: 15px 20px; border-bottom: none;
+        }
+        .modal-creative .modal-header .modal-title { color: white !important; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .modal-creative .modal-header .btn-close { filter: brightness(0) invert(1); opacity: 1; }
+        .info-card { background: #f8fafd; border-radius: 10px; padding: 13px 16px; margin-bottom: 13px; border: 1px solid #e2e8f0; border-left: 4px solid var(--accent-red); }
+        .info-card.primary { border-left-color: var(--primary-dark); }
+        .info-label { font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: 600; margin-bottom: 4px; }
+        .info-value { font-size: 13px; font-weight: 500; color: #1e293b; word-break: break-word; }
+        .info-value.highlight { font-size: 16px; color: var(--accent-red); font-weight: 700; }
+
+        /* Paginação */
+        .pagination-container {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px; background: white; border-top: 1px solid #dee2e6;
+            width: 100%; flex-wrap: wrap; gap: 10px; border-radius: 0 0 8px 8px;
+        }
+        .pagination-info { display: flex; align-items: center; gap: 12px; font-size: 12px; color: #6c757d; flex-wrap: wrap; }
+        .pagination-controls { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+        .pagination-controls button {
+            min-width: 34px; height: 34px; border: 1px solid #dee2e6; background: white;
+            color: var(--primary-dark); border-radius: 6px; display: inline-flex;
+            align-items: center; justify-content: center; cursor: pointer;
+            transition: all 0.2s; font-size: 13px; padding: 0 6px;
+        }
+        .pagination-controls button:hover:not(:disabled) { background-color: var(--primary-dark); color: white; border-color: var(--primary-dark); }
+        .pagination-controls button.active { background-color: var(--primary-dark); color: white; border-color: var(--primary-dark); }
+        .pagination-controls button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .page-size-selector { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6c757d; }
+        .page-size-selector select { width: 70px; border: 1px solid #d6dee6; border-radius: 6px; padding: 4px 6px; font-size: 12px; background-color: white; color: var(--primary-dark); font-weight: 600; cursor: pointer; outline: none; }
+        .page-input { display: flex; align-items: center; gap: 6px; }
+        .page-input input { width: 56px; height: 32px; border: 1px solid #dee2e6; border-radius: 6px; text-align: center; font-size: 13px; padding: 0 4px; }
+        .page-input input:focus { outline: none; border-color: var(--primary-dark); }
+        .page-input button { height: 32px; background: var(--primary-dark); color: white; border: none; border-radius: 6px; padding: 0 10px; font-size: 12px; cursor: pointer; }
+        .page-input button:hover { background: var(--accent-red); }
+
+        /* Toolbar */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+        .toolbar-left  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .toolbar-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .table-search-container {
+            display: flex; align-items: center; white-space: nowrap;
+            background: #ffffff; border: 1px solid #d6dee6;
+            border-radius: 8px; padding: 5px 10px; height: 34px;
+        }
+        .table-search-container:hover { border-color: #1a3a5c; }
+        .table-search-input { border: none !important; outline: none; background: transparent; font-size: 12px; width: 180px; color: #1a3a5c; }
+        .table-search-input::placeholder { color: #94a3b8; }
+
+        /* Badges */
+        .badge-sit { padding: 3px 8px; border-radius: 20px; font-size: 10.5px; font-weight: 700; display: inline-block; letter-spacing: 0.2px; white-space: nowrap; }
+        .badge-ativo     { background: #dcf5e7; color: #0f6b3a; border: 1px solid #b2e6c8; }
+        .badge-encerrado { background: #fde8ea; color: #8b1a22; border: 1px solid #f5b8bc; }
+        .badge-dependente{ background: #cce5ff; color: #004085; border: 1px solid #b8d4f5; }
+        .badge-outro     { background: #f0f2f5; color: #4a5568; border: 1px solid #dce3ec; }
+
+        /* Seletor de colunas */
+        .column-selector-popup {
+            display: none; position: absolute; background: white;
+            border: 1px solid #dce4ee; border-radius: 10px; z-index: 2000;
+            padding: 12px; box-shadow: 0 6px 22px rgba(0,0,0,0.14);
+            min-width: 220px; top: 36px; right: 0; left: auto;
+            max-height: 280px; overflow-y: auto;
+        }
+        .column-selector-popup.show { display: block; }
+        .column-selector-popup label { display: block; padding: 5px 8px; cursor: pointer; font-size: 12px; border-radius: 6px; }
+        .column-selector-popup label:hover { background: #f0f6fb; }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(238,241,246,0.95); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column; gap: 14px;
+        }
+        .loading-progress { font-size: 13px; color: #20445d; font-weight: 700; }
+
+        /* Toast */
+        .toast-sucesso {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #e6f4ea; color: #1e4620; border-radius: 12px;
+            padding: 14px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: none; align-items: center; justify-content: center;
+            gap: 10px; z-index: 9999; min-width: 280px;
+        }
+        .toast-content { display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; gap: 10px; }
+        .toast-content i { color: #28a745; font-size: 14px; }
+        .toast-close { cursor: pointer; font-size: 14px; margin-left: 10px; }
+
+        /* Dicionário */
+        .dicionario-card { background: white; border-radius: 10px; box-shadow: 0 3px 12px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 24px; }
+        .dicionario-header { background: #20445d; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
+        .dicionario-body { padding: 0; }
+        .table-dicionario { width: 100%; font-size: 13px; border-collapse: collapse; }
+        .table-dicionario th { background: #54697b; color: white; padding: 10px 14px; text-align: left; font-size: 12px; text-transform: uppercase; }
+        .table-dicionario td { padding: 10px 14px; border-bottom: 1px solid #f1f1f1; vertical-align: top; }
+        .table-dicionario tr:hover td { background: #f8fafd; }
+        .table-dicionario code { background: #eef2f7; padding: 2px 6px; border-radius: 4px; font-size: 12px; color: #1a3a5c; }
+
+        @media (max-width: 992px) { .container-fluid, .dashboard-container { padding: 0 15px; } }
+        @media (max-width: 768px) { .filters-row { flex-direction: column; align-items: stretch; } .filter-group { min-width: 100%; } .toolbar { flex-direction: column; align-items: stretch; } .table-search-input { width: 100% !important; } }
+    </style>
+</head>
+<body class="iframe-mode">
+
+<div class="main-container">
+    <div class="container-fluid dashboard-container">
+
+        <!-- Navegação por abas -->
+        <div class="nav-tabs-container">
+            <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" id="visao-tab" data-bs-toggle="tab" data-bs-target="#visao">
+                        <i class="material-icons">bar_chart</i>Visão Geral
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="consulta-tab" data-bs-toggle="tab" data-bs-target="#consulta">
+                        <i class="material-icons">person_search</i>Consulta Individual
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="dicionario-tab" data-bs-toggle="tab" data-bs-target="#dicionario">
+                        <i class="material-icons">menu_book</i>Dicionário de Dados
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="downloads-tab" data-bs-toggle="tab" data-bs-target="#downloads">
+                        <i class="material-icons">download</i>Downloads
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Data de atualização -->
+        <div class="data-atualizacao-container">
+            <div class="data-atualizacao-box">
+                <i class="material-icons">event</i>
+                Competência de referência: <span id="data-atualizacao-header" style="margin-left:4px;">carregando...</span>
+            </div>
+        </div>
+
+        <!-- Progresso background -->
+        <div id="bg-progress-indicator" style="display:none;align-items:center;gap:10px;margin:-8px 0 12px 0;padding:6px 14px;background:#eaf2fb;border-radius:8px;font-size:11px;color:#1a3a5c;font-weight:600;">
+            <div class="spinner-border spinner-border-sm" role="status" style="color:#1a3a5c;width:14px;height:14px;border-width:2px;"></div>
+            <span id="bg-progress-txt">Atualizando dados…</span>
+            <div style="flex:1;background:#c8dff0;border-radius:4px;height:5px;min-width:80px;">
+                <div id="bg-progress-bar-inner" style="height:5px;background:#1a3a5c;border-radius:4px;width:0%;transition:width 0.3s;"></div>
+            </div>
+            <span style="font-size:10px;color:#5a7a9a;">Os dados serão mais precisos ao concluir</span>
+        </div>
+
+        <!-- Conteúdo das abas -->
+        <div class="tab-content" id="dashboardTabsContent">
+            <div class="tab-pane fade show active" id="visao" role="tabpanel">
+                <div id="visao-content"></div>
+            </div>
+            <div class="tab-pane fade" id="consulta" role="tabpanel">
+                <div id="consulta-content"></div>
+            </div>
+            <div class="tab-pane fade" id="dicionario" role="tabpanel">
+                <div id="dicionario-content"></div>
+            </div>
+            <div class="tab-pane fade" id="downloads" role="tabpanel">
+                <div id="downloads-content"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal Ficha do Pensionista -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-full-custom modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content modal-creative">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="material-icons">account_circle</i> Ficha do Pensionista
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalContent"></div>
+            <div class="modal-footer" style="gap:8px;">
+                <button type="button" class="btn-export" onclick="exportarModalPDF()">
+                    <i class="material-icons">print</i> PDF
+                </button>
+                <button type="button" class="btn-export" onclick="exportarModalCSV()">
+                    <i class="material-icons">description</i> CSV
+                </button>
+                <button type="button" class="btn-secondary-custom" data-bs-dismiss="modal">
+                    <i class="material-icons">close</i> Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toastSucesso" class="toast-sucesso">
+    <div class="toast-content">
+        <i class="material-icons">check_circle</i>
+        <span>Dados carregados com sucesso!</span>
+    </div>
+    <span class="toast-close" onclick="fecharToast()">✖</span>
+</div>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay" style="display:none;">
+    <div class="spinner-border" role="status" style="color:#20445d;width:2.5rem;height:2.5rem;"></div>
+    <div class="loading-progress" id="loadingProgress">Carregando dados...</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// ============================================================
+// 1. CONFIGURAÇÃO
+// ============================================================
+const BASE_URL   = 'https://raw.githubusercontent.com/transparencia-mg/portal_pensionista/main/dataset/data/';
+const GITHUB_API = 'https://api.github.com/repos/transparencia-mg/portal_pensionista/contents/dataset/data';
+
+// Competência mais atual — detectada automaticamente
+let MES_MAIS_ATUAL = '202601';
+
+const chartPalette = ['#2f4b63','#39a585','#5f6f7f','#f28c28','#7aa6c2','#8e44ad','#c0392b','#16a085','#d35400','#2980b9'];
+
+function getMesesDisponiveis() {
+    const meses = [];
+    // Janeiro/2020 até mês atual
+    for (let ano = 2020; ano <= 2030; ano++) {
+        for (let m = 1; m <= 12; m++) {
+            const ym = ano + String(m).padStart(2,'0');
+            meses.push(ym);
+            if (ym >= MES_MAIS_ATUAL) return meses;
+        }
+    }
+    return meses;
+}
+
+function getFileUrl(anoMes) {
+    // Formato: IPSEMG_MM_AAAA.csv — ex: IPSEMG_01_2020.csv
+    const ano = anoMes.slice(0,4);
+    const mes = anoMes.slice(4,6);
+    return BASE_URL + `IPSEMG_${mes}_${ano}.csv`;
+}
+
+// ============================================================
+// 2. ESTADO GLOBAL
+// ============================================================
+const cacheRows = new Map(); // anoMes -> rows[]
+let todosPensionistas = [];  // array flat do mês ativo
+let pensionistasData = [];   // cópia filtrada (consulta)
+let mesAtivoCarregado = '';
+
+let filtroVisao   = { ano: '', mes: '', reparticao: '' };
+let filtroConsulta = { nome: '', cpf: '', instituidor: '', cpfInst: '', cargo: '', reparticao: '', tipoVinculo: '', dependencia: '' };
+let buscaConsulta = '';
+
+let paginaVisao = 1, itensPorPaginaVisao = 25;
+let paginaConsulta = 1, itensPorPaginaConsulta = 50;
+
+let ordenacaoVisao    = { col: 'REPARTICAO', dir: 'asc' };
+let ordenacaoConsulta = { col: 'PENSIONISTA', dir: 'asc' };
+
+let colunasConsulta = {
+    MES: false, ANO: false, REPARTICAO: true, CARGO: true, TIPO_VINCULO: true,
+    DEPENDENCIA: true, MATRIC_INST: false, INSTITUIDOR: true, CPF_INSTITUIDOR: false,
+    MATRIC_PENS: false, PENSIONISTA: true, CPF_PENSIONISTA: false,
+    DAT_INICIO_DIREITO: true, DATA_FIM_BENEFICIO: true,
+    VALOR_BRUTO: true, DECIMO_TERCEIRO: false, DESCONTOS: true, VALOR_LIQUIDO: true,
+    DATA_NASCIMENTO: false
+};
+
+let chartDistrib = null, chartValores = null, chartDependencia = null;
+let _modalPensionista = null;
+
+// ============================================================
+// 3. AUXILIARES
+// ============================================================
+function mostrarLoading(show, msg) {
+    document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+    if (msg) document.getElementById('loadingProgress').textContent = msg;
+}
+
+function iframeUpdateHeight() {
+    const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) + 10;
+    try { window.parent.postMessage({ iframeHeight: h, iframeResize: true, type: 'resize' }, '*'); } catch(e) {}
+}
+
+function nomeMes(m) {
+    const n = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    return n[parseInt(m)] || m;
+}
+
+function formatarData(val) {
+    if (!val) return '-';
+    const s = String(val).trim();
+    if (s.length >= 10) {
+        const p = s.substring(0,10).split('-');
+        if (p.length === 3) return `${p[2]}/${p[1]}/${p[0]}`;
+        const p2 = s.substring(0,10).split('/');
+        if (p2.length === 3) return s.substring(0,10);
+    }
+    if (s.length === 8 && /^\d{8}$/.test(s)) return `${s.slice(0,2)}/${s.slice(2,4)}/${s.slice(4,8)}`;
+    return s || '-';
+}
+
+function formatarMoeda(val) {
+    if (val === null || val === undefined || val === '') return '-';
+    const n = parseFloat(String(val).replace(',','.'));
+    if (isNaN(n)) return '-';
+    return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function parseMoeda(val) {
+    if (!val) return 0;
+    const n = parseFloat(String(val).replace(',','.'));
+    return isNaN(n) ? 0 : n;
+}
+
+function maskCPF(cpf) {
+    if (!cpf) return '-';
+    const c = String(cpf).replace(/\D/g,'').padStart(11,'0');
+    return c.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '***.$2.$3-**');
+}
+
+function badgeDep(dep) {
+    if (!dep) return '<span class="badge-sit badge-outro">-</span>';
+    const d = dep.toUpperCase();
+    if (d.includes('FILHO') || d.includes('CONJUGE') || d.includes('CÔNJUGE') || d.includes('COMPANHEIRO'))
+        return `<span class="badge-sit badge-dependente">${dep}</span>`;
+    if (d.includes('ATIVO') || d.includes('PENSÃO'))
+        return `<span class="badge-sit badge-ativo">${dep}</span>`;
+    if (d.includes('ENCERR') || d.includes('CANCEL') || d.includes('EXTIN'))
+        return `<span class="badge-sit badge-encerrado">${dep}</span>`;
+    return `<span class="badge-sit badge-outro">${dep}</span>`;
+}
+
+function fecharToast() { document.getElementById('toastSucesso').style.display = 'none'; }
+
+// ============================================================
+// 4. DETECÇÃO DO MÊS MAIS ATUAL (GitHub API)
+// ============================================================
+async function setupAtualizacaoData() {
+    try {
+        const resp = await fetch(GITHUB_API);
+        if (!resp.ok) return;
+        const files = await resp.json();
+        // Padrão: IPSEMG_MM_AAAA.csv
+        const re = /IPSEMG_(\d{2})_(\d{4})\.csv/i;
+        let maxYm = '202001';
+        for (const f of files) {
+            const m = re.exec(f.name);
+            if (m) {
+                const ym = m[2] + m[1]; // YYYYMM
+                if (ym > maxYm) maxYm = ym;
+            }
+        }
+        MES_MAIS_ATUAL = maxYm;
+        filtroVisao.ano = maxYm.slice(0,4);
+        filtroVisao.mes = maxYm.slice(4,6);
+        const el = document.getElementById('data-atualizacao-header');
+        if (el) el.textContent = `${nomeMes(maxYm.slice(4,6))}/${maxYm.slice(0,4)}`;
+    } catch(e) {
+        // fallback: usa 2025-01
+        MES_MAIS_ATUAL = '202501';
+        filtroVisao.ano = '2025';
+        filtroVisao.mes = '01';
+        const el = document.getElementById('data-atualizacao-header');
+        if (el) el.textContent = `Janeiro/2025`;
+    }
+}
+
+// ============================================================
+// 5. CARREGAMENTO DE DADOS
+// ============================================================
+async function carregarMes(anoMes) {
+    if (cacheRows.has(anoMes)) return cacheRows.get(anoMes);
+    const url = getFileUrl(anoMes);
+    try {
+        const resp = await fetch(url);
+        if (!resp.ok) { cacheRows.set(anoMes, []); return []; }
+        const text = await resp.text();
+        const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, delimiter: ';' });
+        const rows = parsed.data || [];
+        cacheRows.set(anoMes, rows);
+        return rows;
+    } catch(e) {
+        cacheRows.set(anoMes, []);
+        return [];
+    }
+}
+
+async function cargaInicial() {
+    mostrarLoading(true, 'Carregando dados…');
+    await setupAtualizacaoData();
+    const anoMes = MES_MAIS_ATUAL;
+    const rows = await carregarMes(anoMes);
+    todosPensionistas = rows;
+    mesAtivoCarregado = anoMes;
+    mostrarLoading(false);
+    renderVisaoGeral();
+}
+
+async function mudarCompetencia(anoMes) {
+    if (mesAtivoCarregado === anoMes && cacheRows.has(anoMes)) {
+        todosPensionistas = cacheRows.get(anoMes);
+        return;
+    }
+    mostrarLoading(true, 'Carregando dados…');
+    const rows = await carregarMes(anoMes);
+    todosPensionistas = rows;
+    mesAtivoCarregado = anoMes;
+    mostrarLoading(false);
+}
+
+// ============================================================
+// 6. VISÃO GERAL
+// ============================================================
+function renderVisaoGeral() {
+    const dados = todosPensionistas;
+    const total = dados.length;
+
+    // Agrupamento por repartição
+    const reparticoesMap = {};
+    for (const r of dados) {
+        const rep = (r.REPARTICAO || r.reparticao || 'NÃO INFORMADO').trim();
+        if (!reparticoesMap[rep]) reparticoesMap[rep] = { total: 0, totalBruto: 0, totalLiquido: 0 };
+        reparticoesMap[rep].total++;
+        reparticoesMap[rep].totalBruto   += parseMoeda(r.VALOR_BRUTO   || r.valor_bruto);
+        reparticoesMap[rep].totalLiquido += parseMoeda(r.VALOR_LIQUIDO  || r.valor_liquido);
+    }
+
+    // Métricas
+    const totalBruto   = dados.reduce((a,r) => a + parseMoeda(r.VALOR_BRUTO   || r.valor_bruto),   0);
+    const totalLiquido = dados.reduce((a,r) => a + parseMoeda(r.VALOR_LIQUIDO  || r.valor_liquido), 0);
+    const totalDescontos = dados.reduce((a,r) => a + parseMoeda(r.DESCONTOS    || r.descontos),     0);
+    const totalReparticoes = Object.keys(reparticoesMap).length;
+
+    // Distribuição por dependência
+    const depMap = {};
+    for (const r of dados) {
+        const dep = (r.DEPENDENCIA || r.dependencia || 'Não informado').trim();
+        depMap[dep] = (depMap[dep]||0)+1;
+    }
+
+    // Lista ordenada por repartição
+    let listaRep = Object.entries(reparticoesMap)
+        .map(([nome,info]) => ({ nome, ...info }))
+        .filter(x => !filtroVisao.reparticao || x.nome.toLowerCase().includes(filtroVisao.reparticao.toLowerCase()));
+
+    listaRep.sort((a,b) => {
+        const col = ordenacaoVisao.col;
+        let va = col==='REPARTICAO' ? a.nome : (a[col]||0);
+        let vb = col==='REPARTICAO' ? b.nome : (b[col]||0);
+        if (typeof va==='string') va=va.toLowerCase();
+        if (typeof vb==='string') vb=vb.toLowerCase();
+        return ordenacaoVisao.dir==='asc'?(va>vb?1:-1):(va<vb?1:-1);
+    });
+
+    const totalPags = Math.ceil(listaRep.length / itensPorPaginaVisao);
+    paginaVisao = Math.min(paginaVisao, Math.max(1, totalPags));
+    const inicio = (paginaVisao-1)*itensPorPaginaVisao;
+    const pagina = listaRep.slice(inicio, inicio+itensPorPaginaVisao);
+
+    const topRep = [...listaRep].sort((a,b)=>b.total-a.total).slice(0,8);
+    const topDep = Object.entries(depMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const mesAno = `${nomeMes(filtroVisao.mes)}/${filtroVisao.ano}`;
+
+    const mesesOpts = getMesesDisponiveis();
+    const anosOpts = [...new Set(mesesOpts.map(m=>m.slice(0,4)))];
+    const mesOpts = [
+        {v:'01',l:'Janeiro'},{v:'02',l:'Fevereiro'},{v:'03',l:'Março'},
+        {v:'04',l:'Abril'},{v:'05',l:'Maio'},{v:'06',l:'Junho'},
+        {v:'07',l:'Julho'},{v:'08',l:'Agosto'},{v:'09',l:'Setembro'},
+        {v:'10',l:'Outubro'},{v:'11',l:'Novembro'},{v:'12',l:'Dezembro'}
+    ];
+
+    const thSort = (col,label) => `<th class="sortable-header" onclick="ordenarVisao('${col}')">${label}<i class="material-icons">${ordenacaoVisao.col===col?(ordenacaoVisao.dir==='asc'?'arrow_upward':'arrow_downward'):'unfold_more'}</i></th>`;
+
+    const html = `
+    <!-- FILTROS -->
+    <div class="filter-container">
+        <div class="filters-row">
+            <div class="filter-group" style="flex:0 0 auto;">
+                <label class="filter-label">Ano</label>
+                <select class="form-select modern-select" id="vg-ano" style="min-width:110px;max-width:140px">
+                    ${anosOpts.map(a=>`<option value="${a}" ${filtroVisao.ano===a?'selected':''}>${a}</option>`).join('')}
+                </select>
+            </div>
+            <div class="filter-group" style="flex:0 0 auto;">
+                <label class="filter-label">Mês</label>
+                <select class="form-select modern-select" id="vg-mes" style="min-width:130px;max-width:160px">
+                    ${mesOpts.map(m=>`<option value="${m.v}" ${filtroVisao.mes===m.v?'selected':''}>${m.l}</option>`).join('')}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Repartição</label>
+                <input class="form-control" id="vg-reparticao" placeholder="Filtrar por repartição..." value="${filtroVisao.reparticao||''}">
+            </div>
+        </div>
+        <div class="botoes-abaixo">
+            <button class="btn-pesquisa" onclick="aplicarFiltroVisao()">
+                <i class="material-icons">search</i> Atualizar Filtros
+            </button>
+            <button class="btn-secondary-custom" onclick="limparFiltroVisao()">
+                <i class="material-icons">clear</i> Limpar
+            </button>
+        </div>
+    </div>
+
+    <!-- CARDS MÉTRICAS -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="metric-card">
+                <div class="metric-header">Total de Pensionistas
+                    <i class="material-icons" data-bs-toggle="tooltip" title="Total de pensionistas na competência selecionada">info_outline</i>
+                </div>
+                <div class="metric-body">
+                    <div class="metric-value">${total.toLocaleString('pt-BR')}</div>
+                    <div class="metric-sublabel">${totalReparticoes} repartição(ões)</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="metric-card">
+                <div class="metric-header">Total Bruto (R$)
+                    <i class="material-icons" data-bs-toggle="tooltip" title="Soma de todos os valores brutos">info_outline</i>
+                </div>
+                <div class="metric-body">
+                    <div class="metric-value" style="font-size:14px;">${formatarMoeda(totalBruto)}</div>
+                    <div class="metric-sublabel">Soma dos valores brutos</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="metric-card">
+                <div class="metric-header">Total Líquido (R$)
+                    <i class="material-icons" data-bs-toggle="tooltip" title="Soma de todos os valores líquidos">info_outline</i>
+                </div>
+                <div class="metric-body">
+                    <div class="metric-value" style="font-size:14px;">${formatarMoeda(totalLiquido)}</div>
+                    <div class="metric-sublabel">Após descontos</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="metric-card">
+                <div class="metric-header">Total Descontos (R$)
+                    <i class="material-icons" data-bs-toggle="tooltip" title="Soma de todos os descontos">info_outline</i>
+                </div>
+                <div class="metric-body">
+                    <div class="metric-value" style="font-size:14px;">${formatarMoeda(totalDescontos)}</div>
+                    <div class="metric-sublabel">Total retido</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRÁFICOS -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-7">
+            <div class="chart-container">
+                <div class="chart-header"><div class="chart-title"><i class="material-icons" style="font-size:16px;margin-right:6px;">bar_chart</i>Top repartições por quantidade de pensionistas</div></div>
+                <div class="chart-wrapper"><canvas id="chartDistrib"></canvas></div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="chart-container">
+                <div class="chart-header"><div class="chart-title"><i class="material-icons" style="font-size:16px;margin-right:6px;">donut_large</i>Distribuição por Dependência</div></div>
+                <div class="chart-pizza-layout">
+                    <div class="chart-pizza-box"><canvas id="chartDependencia"></canvas></div>
+                    <div class="legend-grid" id="legendDependencia"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABELA POR REPARTIÇÃO -->
+    <div class="chart-container">
+        <div class="table-header">
+            <div>
+                <div class="table-title"><i class="material-icons" style="font-size:15px;margin-right:6px;">table_chart</i>Pensionistas por Repartição — ${mesAno}</div>
+                <span class="table-badge" id="badgeVisaoGeral">${listaRep.length} repartição(ões)</span>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                <div class="table-search-container">
+                    <i class="material-icons" style="color:#94a3b8;font-size:16px;">search</i>
+                    <input type="text" class="table-search-input" placeholder="Buscar repartição..." oninput="filtrarTabelaVG(this.value)">
+                </div>
+                <button class="btn-export" onclick="exportarVisaoCSV()"><i class="material-icons">description</i> CSV</button>
+                <button class="btn-export" onclick="exportarVisaoPDF()"><i class="material-icons">print</i> PDF</button>
+            </div>
+        </div>
+        <div class="table-fixed-header-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        ${thSort('REPARTICAO','Repartição')}
+                        ${thSort('total','Pensionistas')}
+                        ${thSort('totalBruto','Valor Bruto')}
+                        ${thSort('totalLiquido','Valor Líquido')}
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyVisao">
+                    ${pagina.map(rep=>`
+                    <tr>
+                        <td><a href="#" class="orgao-link" onclick="irParaReparticao('${rep.nome.replace(/'/g,"\\'")}');return false;">${rep.nome}</a></td>
+                        <td class="text-center">${rep.total.toLocaleString('pt-BR')}</td>
+                        <td class="text-right">${formatarMoeda(rep.totalBruto)}</td>
+                        <td class="text-right">${formatarMoeda(rep.totalLiquido)}</td>
+                        <td class="text-center">
+                            <button class="btn-action" title="Ver pensionistas desta repartição" onclick="irParaReparticao('${rep.nome.replace(/'/g,"\\'")}')">
+                                <i class="material-icons">search</i>
+                            </button>
+                        </td>
+                    </tr>`).join('')}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>TOTAL GERAL</strong></td>
+                        <td class="text-center"><strong>${listaRep.reduce((a,r)=>a+r.total,0).toLocaleString('pt-BR')}</strong></td>
+                        <td class="text-right"><strong>${formatarMoeda(listaRep.reduce((a,r)=>a+r.totalBruto,0))}</strong></td>
+                        <td class="text-right"><strong>${formatarMoeda(listaRep.reduce((a,r)=>a+r.totalLiquido,0))}</strong></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="pagination-container">
+            <div class="pagination-info">
+                <span>Exibindo <strong>${inicio+1}–${Math.min(inicio+itensPorPaginaVisao,listaRep.length)}</strong> de <strong>${listaRep.length}</strong></span>
+                <div class="page-size-selector">Linhas:
+                    <select onchange="itensPorPaginaVisao=+this.value;paginaVisao=1;renderVisaoGeral()">
+                        ${[25,50,100].map(n=>`<option value="${n}" ${itensPorPaginaVisao===n?'selected':''}>${n}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+            <div class="pagination-controls">
+                <button onclick="mudarPagVisao(1)" ${paginaVisao===1?'disabled':''}><i class="material-icons" style="font-size:13px">first_page</i></button>
+                <button onclick="mudarPagVisao(${paginaVisao-1})" ${paginaVisao===1?'disabled':''}><i class="material-icons" style="font-size:13px">chevron_left</i></button>
+                ${Array.from({length:Math.min(5,totalPags)},(_,i)=>{
+                    let p;
+                    if (totalPags<=5) p=i+1;
+                    else if (paginaVisao<=3) p=i+1;
+                    else if (paginaVisao>=totalPags-2) p=totalPags-4+i;
+                    else p=paginaVisao-2+i;
+                    return `<button onclick="mudarPagVisao(${p})" class="${p===paginaVisao?'active':''}">${p}</button>`;
+                }).join('')}
+                <button onclick="mudarPagVisao(${paginaVisao+1})" ${paginaVisao===totalPags||totalPags===0?'disabled':''}><i class="material-icons" style="font-size:13px">chevron_right</i></button>
+                <button onclick="mudarPagVisao(${totalPags})" ${paginaVisao===totalPags||totalPags===0?'disabled':''}><i class="material-icons" style="font-size:13px">last_page</i></button>
+            </div>
+        </div>
+    </div>`;
+
+    document.getElementById('visao-content').innerHTML = html;
+
+    // Gráfico distribuição (barras)
+    setTimeout(() => {
+        if (chartDistrib) { chartDistrib.destroy(); chartDistrib = null; }
+        const ctxD = document.getElementById('chartDistrib');
+        if (ctxD && topRep.length > 0) {
+            const labels = topRep.map(r => r.nome.length>22 ? r.nome.substring(0,20)+'…' : r.nome);
+            chartDistrib = new Chart(ctxD, {
+                type: 'bar',
+                data: { labels, datasets: [{ data: topRep.map(r=>r.total), backgroundColor: chartPalette, barThickness: 26, borderRadius: 4 }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { title: (items) => topRep[items[0].dataIndex].nome } } },
+                    scales: { x: { grid: { display: false }, ticks: { maxRotation: 30, font: { size: 9 } } }, y: { grid: { display: false }, beginAtZero: true } }
+                }
+            });
+        }
+
+        // Gráfico dependência (pizza)
+        if (chartDependencia) { chartDependencia.destroy(); chartDependencia = null; }
+        const ctxP = document.getElementById('chartDependencia');
+        if (ctxP && topDep.length > 0) {
+            chartDependencia = new Chart(ctxP, {
+                type: 'doughnut',
+                data: { labels: topDep.map(d=>d[0]), datasets: [{ data: topDep.map(d=>d[1]), backgroundColor: chartPalette, borderWidth: 2, borderColor: '#fff' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+            document.getElementById('legendDependencia').innerHTML = topDep.map((d,i)=>`
+                <div class="legend-item">
+                    <span class="legend-color" style="background:${chartPalette[i]||'#ccc'}"></span>
+                    <span>${d[0]} (${d[1].toLocaleString('pt-BR')})</span>
+                </div>`).join('');
+        }
+    }, 100);
+
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+    setTimeout(iframeUpdateHeight, 400);
+}
+
+function filtrarTabelaVG(valor) {
+    valor = valor.toLowerCase();
+    document.querySelectorAll('#tbodyVisao tr').forEach(tr => {
+        tr.style.display = tr.textContent.toLowerCase().includes(valor) ? '' : 'none';
+    });
+}
+
+function mudarPagVisao(p) {
+    if (p < 1) return;
+    paginaVisao = p;
+    renderVisaoGeral();
+}
+
+function ordenarVisao(col) {
+    ordenacaoVisao = { col, dir: ordenacaoVisao.col===col && ordenacaoVisao.dir==='asc' ? 'desc' : 'asc' };
+    renderVisaoGeral();
+}
+
+async function aplicarFiltroVisao() {
+    filtroVisao.ano = document.getElementById('vg-ano').value;
+    filtroVisao.mes = document.getElementById('vg-mes').value;
+    filtroVisao.reparticao = (document.getElementById('vg-reparticao')||{}).value||'';
+    const anoMes = filtroVisao.ano + filtroVisao.mes;
+    await mudarCompetencia(anoMes);
+    paginaVisao = 1;
+    renderVisaoGeral();
+}
+
+function limparFiltroVisao() {
+    filtroVisao = { ano: MES_MAIS_ATUAL.slice(0,4), mes: MES_MAIS_ATUAL.slice(4,6), reparticao: '' };
+    paginaVisao = 1;
+    renderVisaoGeral();
+}
+
+function irParaReparticao(rep) {
+    filtroConsulta = { nome:'', cpf:'', instituidor:'', cpfInst:'', cargo:'', reparticao:rep, tipoVinculo:'', dependencia:'' };
+    paginaConsulta = 1;
+    document.querySelector('[data-bs-target="#consulta"]').click();
+    renderConsulta();
+}
+
+function exportarVisaoCSV() {
+    const dados = todosPensionistas;
+    const csv = Papa.unparse(dados, { delimiter: ';' });
+    const blob = new Blob(['\uFEFF'+csv], { type:'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `pensionistas_${filtroVisao.ano}${filtroVisao.mes}.csv`; a.click();
+}
+
+function exportarVisaoPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'landscape' });
+    doc.setFontSize(11);
+    doc.text(`Pensionistas IPSEMG — ${nomeMes(filtroVisao.mes)}/${filtroVisao.ano}`, 14, 10);
+    const dados = todosPensionistas;
+    const reps = {};
+    for (const r of dados) {
+        const rep = (r.REPARTICAO||r.reparticao||'NÃO INFORMADO').trim();
+        if (!reps[rep]) reps[rep] = { total:0, bruto:0, liq:0 };
+        reps[rep].total++;
+        reps[rep].bruto += parseMoeda(r.VALOR_BRUTO||r.valor_bruto);
+        reps[rep].liq   += parseMoeda(r.VALOR_LIQUIDO||r.valor_liquido);
+    }
+    const rows = Object.entries(reps).map(([n,i]) => [n, i.total, formatarMoeda(i.bruto), formatarMoeda(i.liq)]);
+    doc.autoTable({
+        startY: 16,
+        head: [['Repartição','Pensionistas','Valor Bruto','Valor Líquido']],
+        body: rows,
+        foot: [['TOTAL GERAL', rows.reduce((a,r)=>a+r[1],0), formatarMoeda(rows.reduce((a,r)=>a+parseMoeda(Object.values(reps)[rows.indexOf(r)].bruto),0)), '—']],
+        headStyles: { fillColor: [32,68,93] },
+        footStyles: { fillColor: [223,227,232], textColor: [0,0,0], fontStyle: 'bold' },
+        styles: { fontSize: 9 }
+    });
+    doc.save(`visao_geral_pensionistas_${filtroVisao.ano}${filtroVisao.mes}.pdf`);
+}
+
+// ============================================================
+// 7. CONSULTA INDIVIDUAL
+// ============================================================
+function renderConsulta() {
+    const dados = todosPensionistas;
+
+    // Opções dinâmicas
+    const reparticoes = [...new Set(dados.map(r=>(r.REPARTICAO||r.reparticao||'').trim()).filter(Boolean))].sort();
+    const tiposVinculo = [...new Set(dados.map(r=>(r.TIPO_VINCULO||r.tipo_vinculo||'').trim()).filter(Boolean))].sort();
+    const dependencias = [...new Set(dados.map(r=>(r.DEPENDENCIA||r.dependencia||'').trim()).filter(Boolean))].sort();
+
+    let filtrado = dados.filter(r => {
+        const nome  = (r.PENSIONISTA || r.pensionista || '').toLowerCase();
+        const cpf   = (r.CPF_PENSIONISTA || r.cpf_pensionista || '').toLowerCase();
+        const inst  = (r.INSTITUIDOR || r.instituidor || '').toLowerCase();
+        const cpfI  = (r.CPF_INSTITUIDOR || r.cpf_instituidor || '').toLowerCase();
+        const cargo = (r.CARGO || r.cargo || '').toLowerCase();
+        const rep   = (r.REPARTICAO || r.reparticao || '').toLowerCase();
+        const tv    = (r.TIPO_VINCULO || r.tipo_vinculo || '').toLowerCase();
+        const dep   = (r.DEPENDENCIA || r.dependencia || '').toLowerCase();
+        if (filtroConsulta.nome     && !nome.includes(filtroConsulta.nome.toLowerCase()))     return false;
+        if (filtroConsulta.cpf      && !cpf.includes(filtroConsulta.cpf.toLowerCase()))       return false;
+        if (filtroConsulta.instituidor && !inst.includes(filtroConsulta.instituidor.toLowerCase())) return false;
+        if (filtroConsulta.cargo    && !cargo.includes(filtroConsulta.cargo.toLowerCase()))   return false;
+        if (filtroConsulta.reparticao && !rep.includes(filtroConsulta.reparticao.toLowerCase())) return false;
+        if (filtroConsulta.tipoVinculo && !tv.includes(filtroConsulta.tipoVinculo.toLowerCase())) return false;
+        if (filtroConsulta.dependencia && !dep.includes(filtroConsulta.dependencia.toLowerCase())) return false;
+        if (buscaConsulta) {
+            const b = buscaConsulta.toLowerCase();
+            const campos = [nome,inst,cargo,rep,tv,dep];
+            if (!campos.some(c=>c.includes(b))) return false;
+        }
+        return true;
+    });
+
+    filtrado.sort((a,b) => {
+        const col = ordenacaoConsulta.col;
+        let va = (a[col]||a[col.toLowerCase()]||''); let vb = (b[col]||b[col.toLowerCase()]||'');
+        if (typeof va==='string') va=va.toLowerCase();
+        if (typeof vb==='string') vb=vb.toLowerCase();
+        return ordenacaoConsulta.dir==='asc'?(va>vb?1:-1):(va<vb?1:-1);
+    });
+
+    pensionistasData = filtrado;
+    const total = filtrado.length;
+    const totalPags = Math.ceil(total / itensPorPaginaConsulta);
+    paginaConsulta = Math.min(paginaConsulta, Math.max(1, totalPags));
+    const inicio = (paginaConsulta-1)*itensPorPaginaConsulta;
+    const pagina = filtrado.slice(inicio, inicio+itensPorPaginaConsulta);
+
+    const colsOrdem = ['MES','ANO','REPARTICAO','CARGO','TIPO_VINCULO','DEPENDENCIA','MATRIC_INST','INSTITUIDOR','CPF_INSTITUIDOR','MATRIC_PENS','PENSIONISTA','CPF_PENSIONISTA','DAT_INICIO_DIREITO','DATA_FIM_BENEFICIO','VALOR_BRUTO','DECIMO_TERCEIRO','DESCONTOS','VALOR_LIQUIDO','DATA_NASCIMENTO'];
+    const colLabels = { MES:'Mês', ANO:'Ano', REPARTICAO:'Repartição', CARGO:'Cargo', TIPO_VINCULO:'Tipo Vínculo', DEPENDENCIA:'Dependência', MATRIC_INST:'Matr. Instituidor', INSTITUIDOR:'Instituidor', CPF_INSTITUIDOR:'CPF Instituidor', MATRIC_PENS:'Matr. Pensionista', PENSIONISTA:'Pensionista', CPF_PENSIONISTA:'CPF Pensionista', DAT_INICIO_DIREITO:'Início Direito', DATA_FIM_BENEFICIO:'Fim Benefício', VALOR_BRUTO:'Valor Bruto', DECIMO_TERCEIRO:'13º Salário', DESCONTOS:'Descontos', VALOR_LIQUIDO:'Valor Líquido', DATA_NASCIMENTO:'Nascimento' };
+    const colsVis = colsOrdem.filter(c => colunasConsulta[c]);
+    const colsMoeda = new Set(['VALOR_BRUTO','DECIMO_TERCEIRO','DESCONTOS','VALOR_LIQUIDO']);
+    const colsData  = new Set(['DAT_INICIO_DIREITO','DATA_FIM_BENEFICIO','DATA_NASCIMENTO']);
+    const colsCPF   = new Set(['CPF_PENSIONISTA','CPF_INSTITUIDOR']);
+
+    const thC = (col) => `<th class="sortable-header" onclick="ordenarConsulta('${col}')" style="white-space:nowrap">${colLabels[col]||col}<i class="material-icons">${ordenacaoConsulta.col===col?(ordenacaoConsulta.dir==='asc'?'arrow_upward':'arrow_downward'):'unfold_more'}</i></th>`;
+
+    const mesesOpts = getMesesDisponiveis();
+    const anosOpts  = [...new Set(mesesOpts.map(m=>m.slice(0,4)))];
+
+    const html = `
+    <!-- FILTROS CONSULTA -->
+    <div class="filter-container">
+        <div class="consulta-filters-row">
+            <div class="consulta-filter-group">
+                <label class="filter-label">Nome do Pensionista</label>
+                <input class="form-control" id="fc-nome" placeholder="Nome do pensionista..." value="${filtroConsulta.nome||''}">
+            </div>
+            <div class="consulta-filter-group">
+                <label class="filter-label">Instituidor</label>
+                <input class="form-control" id="fc-instituidor" placeholder="Nome do instituidor..." value="${filtroConsulta.instituidor||''}">
+            </div>
+            <div class="consulta-filter-group">
+                <label class="filter-label">Cargo do Instituidor</label>
+                <input class="form-control" id="fc-cargo" placeholder="Cargo..." value="${filtroConsulta.cargo||''}">
+            </div>
+            <div class="consulta-filter-group">
+                <label class="filter-label">Repartição</label>
+                <select class="form-select modern-select" id="fc-reparticao">
+                    <option value="">Todas</option>
+                    ${reparticoes.map(r=>`<option value="${r}" ${filtroConsulta.reparticao===r?'selected':''}>${r}</option>`).join('')}
+                </select>
+            </div>
+            <div class="consulta-filter-group">
+                <label class="filter-label">Tipo de Vínculo</label>
+                <select class="form-select modern-select" id="fc-tipovinculo">
+                    <option value="">Todos</option>
+                    ${tiposVinculo.map(t=>`<option value="${t}" ${filtroConsulta.tipoVinculo===t?'selected':''}>${t}</option>`).join('')}
+                </select>
+            </div>
+            <div class="consulta-filter-group">
+                <label class="filter-label">Dependência</label>
+                <select class="form-select modern-select" id="fc-dependencia">
+                    <option value="">Todas</option>
+                    ${dependencias.map(d=>`<option value="${d}" ${filtroConsulta.dependencia===d?'selected':''}>${d}</option>`).join('')}
+                </select>
+            </div>
+        </div>
+        <div class="consulta-buttons-row">
+            <button class="btn-pesquisa" onclick="aplicarFiltroConsulta()">
+                <i class="material-icons">search</i> Pesquisar
+            </button>
+            <button class="btn-secondary-custom" onclick="limparFiltroConsulta()">
+                <i class="material-icons">clear</i> Limpar
+            </button>
+        </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <div class="table-search-container">
+                <i class="material-icons" style="color:#94a3b8;font-size:16px;">search</i>
+                <input type="text" class="table-search-input" id="buscaConsultaInput" placeholder="Buscar em todos os campos..." value="${buscaConsulta}" oninput="buscarConsulta(this.value)">
+            </div>
+            <span class="table-badge" id="badgeConsulta">${total.toLocaleString('pt-BR')} pensionistas</span>
+        </div>
+        <div class="toolbar-right">
+            <button class="btn-export" onclick="exportarConsultaCSV()"><i class="material-icons">description</i> CSV</button>
+            <button class="btn-export" onclick="exportarConsultaPDF()"><i class="material-icons">print</i> PDF</button>
+            <div style="position:relative;">
+                <button class="btn-export" onclick="toggleColSelector()"><i class="material-icons">view_column</i> Colunas</button>
+                <div class="column-selector-popup" id="colSelectorPopup">
+                    <div style="font-size:11px;font-weight:700;color:#1a3a5c;padding:4px 6px 8px;">Selecionar colunas</div>
+                    ${colsOrdem.map(c=>`
+                    <label>
+                        <input type="checkbox" ${colunasConsulta[c]?'checked':''} onchange="toggleColuna('${c}',this.checked)"> ${colLabels[c]||c}
+                    </label>`).join('')}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABELA -->
+    <div class="chart-container">
+        <div class="table-header">
+            <div class="table-title"><i class="material-icons" style="font-size:15px;margin-right:6px;">people</i>Relação de Pensionistas</div>
+        </div>
+        <div class="table-fixed-header-container">
+            <table class="table" id="tabelaConsulta">
+                <thead>
+                    <tr>
+                        ${colsVis.map(c=>thC(c)).join('')}
+                        <th style="white-space:nowrap">Ficha</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyConsulta">
+                    ${pagina.map((r,idx)=>`
+                    <tr>
+                        ${colsVis.map(c=>{
+                            let v = r[c] || r[c.toLowerCase()] || '';
+                            if (colsMoeda.has(c)) v = formatarMoeda(parseMoeda(v) || v);
+                            else if (colsData.has(c)) v = formatarData(v);
+                            else if (colsCPF.has(c)) v = maskCPF(v);
+                            else if (c==='DEPENDENCIA') return `<td>${badgeDep(v)}</td>`;
+                            return `<td>${v||'-'}</td>`;
+                        }).join('')}
+                        <td class="text-center">
+                            <button class="btn-action" title="Ver ficha completa" onclick="verFicha(${inicio+idx})">
+                                <i class="material-icons">visibility</i>
+                            </button>
+                        </td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination-container">
+            <div class="pagination-info">
+                <span>Exibindo <strong>${inicio+1}–${Math.min(inicio+itensPorPaginaConsulta,total)}</strong> de <strong>${total}</strong></span>
+                <div class="page-size-selector">Linhas:
+                    <select onchange="itensPorPaginaConsulta=+this.value;paginaConsulta=1;renderConsulta()">
+                        ${[25,50,100,200].map(n=>`<option value="${n}" ${itensPorPaginaConsulta===n?'selected':''}>${n}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+            <div class="pagination-controls">
+                <button onclick="mudarPagConsulta(1)" ${paginaConsulta===1?'disabled':''}><i class="material-icons" style="font-size:13px">first_page</i></button>
+                <button onclick="mudarPagConsulta(${paginaConsulta-1})" ${paginaConsulta===1?'disabled':''}><i class="material-icons" style="font-size:13px">chevron_left</i></button>
+                ${Array.from({length:Math.min(5,totalPags)},(_,i)=>{
+                    let p;
+                    if (totalPags<=5) p=i+1;
+                    else if (paginaConsulta<=3) p=i+1;
+                    else if (paginaConsulta>=totalPags-2) p=totalPags-4+i;
+                    else p=paginaConsulta-2+i;
+                    return `<button onclick="mudarPagConsulta(${p})" class="${p===paginaConsulta?'active':''}">${p}</button>`;
+                }).join('')}
+                <button onclick="mudarPagConsulta(${paginaConsulta+1})" ${paginaConsulta===totalPags||totalPags===0?'disabled':''}><i class="material-icons" style="font-size:13px">chevron_right</i></button>
+                <button onclick="mudarPagConsulta(${totalPags})" ${paginaConsulta===totalPags||totalPags===0?'disabled':''}><i class="material-icons" style="font-size:13px">last_page</i></button>
+            </div>
+        </div>
+    </div>`;
+
+    document.getElementById('consulta-content').innerHTML = html;
+    setTimeout(iframeUpdateHeight, 400);
+}
+
+function aplicarFiltroConsulta() {
+    filtroConsulta.nome        = (document.getElementById('fc-nome')||{}).value||'';
+    filtroConsulta.instituidor = (document.getElementById('fc-instituidor')||{}).value||'';
+    filtroConsulta.cargo       = (document.getElementById('fc-cargo')||{}).value||'';
+    filtroConsulta.reparticao  = (document.getElementById('fc-reparticao')||{}).value||'';
+    filtroConsulta.tipoVinculo = (document.getElementById('fc-tipovinculo')||{}).value||'';
+    filtroConsulta.dependencia = (document.getElementById('fc-dependencia')||{}).value||'';
+    paginaConsulta = 1;
+    renderConsulta();
+}
+
+function limparFiltroConsulta() {
+    filtroConsulta = { nome:'', cpf:'', instituidor:'', cpfInst:'', cargo:'', reparticao:'', tipoVinculo:'', dependencia:'' };
+    buscaConsulta = '';
+    paginaConsulta = 1;
+    renderConsulta();
+}
+
+function buscarConsulta(val) {
+    buscaConsulta = val;
+    paginaConsulta = 1;
+    renderConsulta();
+}
+
+function mudarPagConsulta(p) {
+    if (p < 1) return;
+    paginaConsulta = p;
+    renderConsulta();
+}
+
+function ordenarConsulta(col) {
+    ordenacaoConsulta = { col, dir: ordenacaoConsulta.col===col && ordenacaoConsulta.dir==='asc' ? 'desc' : 'asc' };
+    renderConsulta();
+}
+
+function toggleColuna(col, val) { colunasConsulta[col] = val; renderConsulta(); }
+
+function toggleColSelector() {
+    document.getElementById('colSelectorPopup').classList.toggle('show');
+}
+
+// Ficha do pensionista
+function verFicha(idx) {
+    const r = pensionistasData[idx];
+    if (!r) return;
+    _modalPensionista = r;
+    const get = (k) => r[k]||r[k.toLowerCase()]||'-';
+    const moeda = (k) => formatarMoeda(parseMoeda(get(k)));
+    const data  = (k) => formatarData(get(k));
+    const cpf   = (k) => maskCPF(get(k));
+
+    document.getElementById('modalContent').innerHTML = `
+    <div class="row g-3">
+        <div class="col-12"><div class="info-card primary">
+            <div class="info-label">Pensionista</div>
+            <div class="info-value highlight">${get('PENSIONISTA')}</div>
+            <div class="info-label" style="margin-top:8px">CPF (mascarado)</div>
+            <div class="info-value">${cpf('CPF_PENSIONISTA')}</div>
+        </div></div>
+        <div class="col-md-6"><div class="info-card">
+            <div class="info-label">Matrícula Pensionista</div>
+            <div class="info-value">${get('MATRIC_PENS')}</div>
+            <div class="info-label" style="margin-top:8px">Data de Nascimento</div>
+            <div class="info-value">${data('DATA_NASCIMENTO')}</div>
+        </div></div>
+        <div class="col-md-6"><div class="info-card">
+            <div class="info-label">Dependência</div>
+            <div class="info-value">${get('DEPENDENCIA')}</div>
+            <div class="info-label" style="margin-top:8px">Tipo de Vínculo</div>
+            <div class="info-value">${get('TIPO_VINCULO')}</div>
+        </div></div>
+        <div class="col-12"><div class="info-card primary">
+            <div class="info-label">Instituidor</div>
+            <div class="info-value highlight" style="font-size:14px">${get('INSTITUIDOR')}</div>
+            <div style="display:flex;gap:30px;flex-wrap:wrap;margin-top:8px">
+                <div><div class="info-label">CPF Instituidor (mascarado)</div><div class="info-value">${cpf('CPF_INSTITUIDOR')}</div></div>
+                <div><div class="info-label">Matrícula Instituidor</div><div class="info-value">${get('MATRIC_INST')}</div></div>
+                <div><div class="info-label">Cargo</div><div class="info-value">${get('CARGO')}</div></div>
+            </div>
+        </div></div>
+        <div class="col-md-6"><div class="info-card">
+            <div class="info-label">Repartição</div>
+            <div class="info-value">${get('REPARTICAO')}</div>
+        </div></div>
+        <div class="col-md-6"><div class="info-card">
+            <div class="info-label">Competência</div>
+            <div class="info-value">${nomeMes(get('MES'))}/${get('ANO')}</div>
+        </div></div>
+        <div class="col-md-6"><div class="info-card">
+            <div class="info-label">Início do Direito</div>
+            <div class="info-value">${data('DAT_INICIO_DIREITO')}</div>
+        </div></div>
+        <div class="col-md-6"><div class="info-card">
+            <div class="info-label">Fim do Benefício</div>
+            <div class="info-value">${data('DATA_FIM_BENEFICIO')}</div>
+        </div></div>
+        <div class="col-md-3"><div class="info-card">
+            <div class="info-label">Valor Bruto</div>
+            <div class="info-value" style="color:#1a3a5c;font-weight:700">${moeda('VALOR_BRUTO')}</div>
+        </div></div>
+        <div class="col-md-3"><div class="info-card">
+            <div class="info-label">13º Salário</div>
+            <div class="info-value">${moeda('DECIMO_TERCEIRO')}</div>
+        </div></div>
+        <div class="col-md-3"><div class="info-card">
+            <div class="info-label">Descontos</div>
+            <div class="info-value" style="color:#b93c42;font-weight:700">- ${moeda('DESCONTOS')}</div>
+        </div></div>
+        <div class="col-md-3"><div class="info-card">
+            <div class="info-label">Valor Líquido</div>
+            <div class="info-value" style="color:#0f6b3a;font-weight:700">${moeda('VALOR_LIQUIDO')}</div>
+        </div></div>
+    </div>`;
+
+    new bootstrap.Modal(document.getElementById('detailModal')).show();
+}
+
+window.exportarModalPDF = function() {
+    const r = _modalPensionista; if (!r) return;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(14); doc.setTextColor(32,68,93);
+    doc.text('Ficha do Pensionista — IPSEMG', 14, 15);
+    doc.setFontSize(10); doc.setTextColor(100,100,100);
+    doc.text(`Emitido em: ${new Date().toLocaleString('pt-BR')}`, 14, 22);
+    const get = (k) => String(r[k]||r[k.toLowerCase()]||'');
+    const rows = [
+        ['Pensionista', get('PENSIONISTA')], ['CPF Pensionista (mascarado)', maskCPF(get('CPF_PENSIONISTA'))],
+        ['Matrícula Pensionista', get('MATRIC_PENS')], ['Data de Nascimento', formatarData(get('DATA_NASCIMENTO'))],
+        ['Dependência', get('DEPENDENCIA')], ['Tipo de Vínculo', get('TIPO_VINCULO')],
+        ['Instituidor', get('INSTITUIDOR')], ['CPF Instituidor (mascarado)', maskCPF(get('CPF_INSTITUIDOR'))],
+        ['Matrícula Instituidor', get('MATRIC_INST')], ['Cargo', get('CARGO')],
+        ['Repartição', get('REPARTICAO')], ['Competência', `${nomeMes(get('MES'))}/${get('ANO')}`],
+        ['Início Direito', formatarData(get('DAT_INICIO_DIREITO'))], ['Fim Benefício', formatarData(get('DATA_FIM_BENEFICIO'))],
+        ['Valor Bruto', formatarMoeda(parseMoeda(get('VALOR_BRUTO')))], ['13º Salário', formatarMoeda(parseMoeda(get('DECIMO_TERCEIRO')))],
+        ['Descontos', formatarMoeda(parseMoeda(get('DESCONTOS')))], ['Valor Líquido', formatarMoeda(parseMoeda(get('VALOR_LIQUIDO')))]
+    ];
+    doc.autoTable({ head:[['Campo','Valor']], body:rows, startY:28, headStyles:{fillColor:[32,68,93]}, styles:{fontSize:9}, columnStyles:{0:{fontStyle:'bold',cellWidth:60}} });
+    doc.save(`ficha_pensionista.pdf`);
+};
+
+window.exportarModalCSV = function() {
+    const r = _modalPensionista; if (!r) return;
+    const rows = Object.entries(r).map(([k,v]) => [`"${k}"`, `"${String(v||'').replace(/"/g,'""')}"`]);
+    const csv = [['Campo','Valor'], ...rows].map(l=>l.join(';')).join('\n');
+    const blob = new Blob(['\uFEFF'+csv], {type:'text/csv'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'ficha_pensionista.csv'; a.click();
+};
+
+function exportarConsultaCSV() {
+    const csv = Papa.unparse(pensionistasData, { delimiter: ';' });
+    const blob = new Blob(['\uFEFF'+csv], {type:'text/csv'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `pensionistas_consulta_${filtroVisao.ano}${filtroVisao.mes}.csv`; a.click();
+}
+
+function exportarConsultaPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'landscape' });
+    doc.setFontSize(10);
+    doc.text(`Pensionistas IPSEMG — ${nomeMes(filtroVisao.mes)}/${filtroVisao.ano} — ${pensionistasData.length} registros`, 14, 10);
+    const get = (r,k) => String(r[k]||r[k.toLowerCase()]||'');
+    const rows = pensionistasData.slice(0,500).map(r => [
+        get(r,'PENSIONISTA'), get(r,'DEPENDENCIA'), get(r,'INSTITUIDOR'), get(r,'CARGO'), get(r,'REPARTICAO'),
+        formatarMoeda(parseMoeda(get(r,'VALOR_BRUTO'))), formatarMoeda(parseMoeda(get(r,'VALOR_LIQUIDO')))
+    ]);
+    doc.autoTable({
+        startY: 14,
+        head: [['Pensionista','Dependência','Instituidor','Cargo','Repartição','Bruto','Líquido']],
+        body: rows,
+        headStyles: { fillColor: [32,68,93] },
+        styles: { fontSize: 7 }
+    });
+    doc.save(`pensionistas_${filtroVisao.ano}${filtroVisao.mes}.pdf`);
+}
+
+// ============================================================
+// 8. DICIONÁRIO DE DADOS
+// ============================================================
+function renderDicionario() {
+    document.getElementById('dicionario-content').innerHTML = `
+    <div class="dicionario-card">
+        <div class="dicionario-header">
+            <i class="material-icons" style="font-size:20px;">menu_book</i>
+            <div>
+                <div style="font-size:15px;font-weight:700;">Dicionário de Dados — Pensionistas IPSEMG</div>
+                <div style="font-size:11px;opacity:0.8;">Arquivo: IPSEMG_MM_AAAA.csv</div>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:8px;">
+                <button class="btn-export" style="background:rgba(255,255,255,0.15)!important;color:white;border-color:rgba(255,255,255,0.3)" onclick="baixarDicionarioCSV()">
+                    <i class="material-icons">description</i> CSV
+                </button>
+                <button class="btn-export" style="background:rgba(255,255,255,0.15)!important;color:white;border-color:rgba(255,255,255,0.3)" onclick="baixarDicionarioPDF()">
+                    <i class="material-icons">print</i> PDF
+                </button>
+            </div>
+        </div>
+        <div class="dicionario-body">
+            <div class="table-responsive">
+                <table class="table-dicionario">
+                    <thead>
+                        <tr>
+                            <th style="width:200px">Campo</th>
+                            <th>Descrição</th>
+                            <th style="width:120px">Tipo</th>
+                            <th style="width:180px">Exemplo / Observação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>MES</code></td><td>Mês de referência da competência</td><td>Numérico (1–12)</td><td>1, 2, …, 12</td></tr>
+                        <tr><td><code>ANO</code></td><td>Ano de referência da competência</td><td>Numérico (AAAA)</td><td>2020, 2021…</td></tr>
+                        <tr><td><code>REPARTICAO</code></td><td>Órgão/Entidade responsável pelo pagamento da pensão</td><td>Texto</td><td>POLÍCIA MILITAR DE MG</td></tr>
+                        <tr><td><code>CARGO</code></td><td>Cargo que o instituidor ocupava no momento da concessão</td><td>Texto</td><td>SOLDADO PM</td></tr>
+                        <tr><td><code>TIPO_VINCULO</code></td><td>Natureza do vínculo funcional do instituidor (efetivo, comissionado, etc.)</td><td>Texto</td><td>EFETIVO</td></tr>
+                        <tr><td><code>DEPENDENCIA</code></td><td>Grau de dependência do pensionista em relação ao instituidor</td><td>Texto</td><td>CÔNJUGE / FILHO(A)</td></tr>
+                        <tr><td><code>MATRIC_INST</code></td><td>Matrícula funcional do instituidor no órgão de origem</td><td>Texto</td><td>000123456</td></tr>
+                        <tr><td><code>INSTITUIDOR</code></td><td>Nome completo do servidor que originou a pensão</td><td>Texto</td><td>JOÃO DA SILVA</td></tr>
+                        <tr><td><code>CPF_INSTITUIDOR</code></td><td>CPF do instituidor (protegido por LGPD — exibido mascarado)</td><td>Texto (11 dígitos)</td><td>***.***.***-**</td></tr>
+                        <tr><td><code>MATRIC_PENS</code></td><td>Matrícula do pensionista no sistema de folha</td><td>Texto</td><td>000987654</td></tr>
+                        <tr><td><code>PENSIONISTA</code></td><td>Nome completo do beneficiário da pensão</td><td>Texto</td><td>MARIA DA SILVA</td></tr>
+                        <tr><td><code>CPF_PENSIONISTA</code></td><td>CPF do pensionista (protegido por LGPD — exibido mascarado)</td><td>Texto (11 dígitos)</td><td>***.***.***-**</td></tr>
+                        <tr><td><code>DAT_INICIO_DIREITO</code></td><td>Data de início da concessão do benefício de pensão</td><td>Data (DD/MM/AAAA)</td><td>15/03/2010</td></tr>
+                        <tr><td><code>DATA_FIM_BENEFICIO</code></td><td>Data prevista ou efetiva de encerramento do benefício</td><td>Data (DD/MM/AAAA)</td><td>Em branco = vigente</td></tr>
+                        <tr><td><code>VALOR_BRUTO</code></td><td>Valor bruto da pensão antes de quaisquer descontos</td><td>Numérico (R$)</td><td>3.500,00</td></tr>
+                        <tr><td><code>DECIMO_TERCEIRO</code></td><td>Parcela de 13º salário (gratificação natalina)</td><td>Numérico (R$)</td><td>1.750,00</td></tr>
+                        <tr><td><code>DESCONTOS</code></td><td>Total de descontos incidentes (IRPF, contribuição previdenciária, etc.)</td><td>Numérico (R$)</td><td>420,00</td></tr>
+                        <tr><td><code>VALOR_LIQUIDO</code></td><td>Valor efetivamente recebido pelo pensionista após descontos</td><td>Numérico (R$)</td><td>3.080,00</td></tr>
+                        <tr><td><code>DATA_NASCIMENTO</code></td><td>Data de nascimento do pensionista</td><td>Data (DD/MM/AAAA)</td><td>22/08/1975</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>`;
+    setTimeout(iframeUpdateHeight, 300);
+}
+
+function baixarDicionarioCSV() {
+    const linhas = [
+        ['Campo','Descrição','Tipo','Exemplo'],
+        ['MES','Mês de referência da competência','Numérico (1–12)','1, 2...12'],
+        ['ANO','Ano de referência da competência','Numérico (AAAA)','2020, 2021...'],
+        ['REPARTICAO','Órgão/Entidade responsável pelo pagamento','Texto','POLÍCIA MILITAR DE MG'],
+        ['CARGO','Cargo do instituidor','Texto','SOLDADO PM'],
+        ['TIPO_VINCULO','Natureza do vínculo funcional do instituidor','Texto','EFETIVO'],
+        ['DEPENDENCIA','Grau de dependência do pensionista','Texto','CÔNJUGE / FILHO(A)'],
+        ['MATRIC_INST','Matrícula do instituidor','Texto','000123456'],
+        ['INSTITUIDOR','Nome do servidor que originou a pensão','Texto','JOÃO DA SILVA'],
+        ['CPF_INSTITUIDOR','CPF do instituidor (LGPD)','Texto','***.***.***-**'],
+        ['MATRIC_PENS','Matrícula do pensionista','Texto','000987654'],
+        ['PENSIONISTA','Nome completo do beneficiário','Texto','MARIA DA SILVA'],
+        ['CPF_PENSIONISTA','CPF do pensionista (LGPD)','Texto','***.***.***-**'],
+        ['DAT_INICIO_DIREITO','Data de início do benefício','Data (DD/MM/AAAA)','15/03/2010'],
+        ['DATA_FIM_BENEFICIO','Data de encerramento do benefício','Data (DD/MM/AAAA)','Em branco = vigente'],
+        ['VALOR_BRUTO','Valor bruto da pensão','Numérico (R$)','3500.00'],
+        ['DECIMO_TERCEIRO','Parcela de 13º salário','Numérico (R$)','1750.00'],
+        ['DESCONTOS','Total de descontos','Numérico (R$)','420.00'],
+        ['VALOR_LIQUIDO','Valor líquido recebido','Numérico (R$)','3080.00'],
+        ['DATA_NASCIMENTO','Data de nascimento do pensionista','Data (DD/MM/AAAA)','22/08/1975']
+    ];
+    const csv = linhas.map(l=>l.map(c=>`"${c}"`).join(';')).join('\n');
+    const blob = new Blob(['\uFEFF'+csv], {type:'text/csv'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'dicionario_pensionistas_ipsemg.csv'; a.click();
+}
+
+function baixarDicionarioPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(13); doc.text('Dicionário de Dados — Pensionistas IPSEMG', 14, 15);
+    doc.setFontSize(9); doc.setTextColor(100,100,100);
+    doc.text(`Arquivo: IPSEMG_MM_AAAA.csv | Emitido em: ${new Date().toLocaleString('pt-BR')}`, 14, 22);
+    doc.autoTable({
+        startY: 28,
+        head: [['Campo','Descrição','Tipo']],
+        body: [
+            ['MES','Mês de referência da competência','Numérico'],
+            ['ANO','Ano de referência da competência','Numérico'],
+            ['REPARTICAO','Órgão/Entidade responsável pelo pagamento','Texto'],
+            ['CARGO','Cargo do instituidor','Texto'],
+            ['TIPO_VINCULO','Natureza do vínculo funcional do instituidor','Texto'],
+            ['DEPENDENCIA','Grau de dependência do pensionista','Texto'],
+            ['MATRIC_INST','Matrícula do instituidor','Texto'],
+            ['INSTITUIDOR','Nome do servidor que originou a pensão','Texto'],
+            ['CPF_INSTITUIDOR','CPF do instituidor (LGPD — mascarado)','Texto'],
+            ['MATRIC_PENS','Matrícula do pensionista','Texto'],
+            ['PENSIONISTA','Nome completo do beneficiário da pensão','Texto'],
+            ['CPF_PENSIONISTA','CPF do pensionista (LGPD — mascarado)','Texto'],
+            ['DAT_INICIO_DIREITO','Data de início da concessão do benefício','Data'],
+            ['DATA_FIM_BENEFICIO','Data de encerramento do benefício','Data'],
+            ['VALOR_BRUTO','Valor bruto da pensão antes dos descontos','Numérico (R$)'],
+            ['DECIMO_TERCEIRO','Parcela de 13º salário (gratificação natalina)','Numérico (R$)'],
+            ['DESCONTOS','Total de descontos incidentes','Numérico (R$)'],
+            ['VALOR_LIQUIDO','Valor efetivamente recebido após descontos','Numérico (R$)'],
+            ['DATA_NASCIMENTO','Data de nascimento do pensionista','Data']
+        ],
+        headStyles: { fillColor: [32,68,93] },
+        styles: { fontSize: 9 },
+        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 48 } }
+    });
+    doc.save('dicionario_pensionistas_ipsemg.pdf');
+}
+
+// ============================================================
+// 9. DOWNLOADS
+// ============================================================
+function renderDownloads() {
+    const meses = getMesesDisponiveis();
+    const anos  = [...new Set(meses.map(m=>m.slice(0,4)))].sort();
+
+    document.getElementById('downloads-content').innerHTML = `
+    <div class="filter-container">
+        <div class="row g-4">
+            <!-- Portal de Dados -->
+            <div class="col-md-4">
+                <div style="text-align:center;padding:20px;">
+                    <i class="material-icons" style="font-size:48px;color:#20445d;">cloud_download</i>
+                    <h5 style="margin-top:8px;margin-bottom:4px;font-size:15px;">Portal de Dados Abertos</h5>
+                    <p style="color:#6c757d;font-size:13px;margin-bottom:12px;">Acesse todos os arquivos mensais de pensionistas IPSEMG no repositório oficial</p>
+                    <a href="https://github.com/transparencia-mg/portal_pensionista/tree/main/dataset/data" target="_blank" class="btn-pesquisa" style="display:inline-flex;">
+                        <i class="material-icons">open_in_new</i> Repositório GitHub
+                    </a>
+                </div>
+            </div>
+            <!-- Download por competência -->
+            <div class="col-md-4">
+                <div style="padding:20px;">
+                    <i class="material-icons" style="font-size:32px;color:#20445d;display:block;margin-bottom:8px;">calendar_today</i>
+                    <h5 style="font-size:14px;margin-bottom:12px;">Download por Competência</h5>
+                    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+                        <select class="form-select modern-select" id="dl-ano" style="flex:1;min-width:80px;max-width:110px">
+                            ${anos.map(a=>`<option value="${a}" ${a===filtroVisao.ano?'selected':''}>${a}</option>`).join('')}
+                        </select>
+                        <select class="form-select modern-select" id="dl-mes" style="flex:1;min-width:110px;max-width:140px">
+                            ${[{v:'01',l:'Janeiro'},{v:'02',l:'Fevereiro'},{v:'03',l:'Março'},{v:'04',l:'Abril'},{v:'05',l:'Maio'},{v:'06',l:'Junho'},{v:'07',l:'Julho'},{v:'08',l:'Agosto'},{v:'09',l:'Setembro'},{v:'10',l:'Outubro'},{v:'11',l:'Novembro'},{v:'12',l:'Dezembro'}]
+                                .map(m=>`<option value="${m.v}" ${filtroVisao.mes===m.v?'selected':''}>${m.l}</option>`).join('')}
+                        </select>
+                    </div>
+                    <button class="btn-pesquisa" onclick="downloadCompetencia()">
+                        <i class="material-icons">download</i> Baixar CSV
+                    </button>
+                </div>
+            </div>
+            <!-- Dicionário -->
+            <div class="col-md-4">
+                <div style="padding:20px;">
+                    <i class="material-icons" style="font-size:32px;color:#20445d;display:block;margin-bottom:8px;">menu_book</i>
+                    <h5 style="font-size:14px;margin-bottom:12px;">Dicionário de Dados</h5>
+                    <p style="color:#6c757d;font-size:12px;margin-bottom:12px;">Descrição completa de todos os campos do arquivo</p>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn-pesquisa" onclick="baixarDicionarioCSV()">
+                            <i class="material-icons">description</i> CSV
+                        </button>
+                        <button class="btn-secondary-custom" onclick="baixarDicionarioPDF()">
+                            <i class="material-icons">print</i> PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de arquivos disponíveis -->
+    <div class="chart-container">
+        <div class="table-header">
+            <div class="table-title"><i class="material-icons" style="font-size:15px;margin-right:6px;">folder_open</i>Arquivos Disponíveis</div>
+            <span class="table-badge">${meses.length} competências</span>
+        </div>
+        <div class="table-fixed-header-container" style="max-height:420px;">
+            <table class="table">
+                <thead><tr>
+                    <th>Arquivo</th><th>Competência</th><th style="text-align:center">Download</th>
+                </tr></thead>
+                <tbody>
+                    ${[...meses].reverse().map(ym => {
+                        const ano=ym.slice(0,4), mes=ym.slice(4,6);
+                        const fname = `IPSEMG_${mes}_${ano}.csv`;
+                        const url   = BASE_URL + fname;
+                        return `<tr>
+                            <td><code>${fname}</code></td>
+                            <td>${nomeMes(mes)}/${ano}</td>
+                            <td style="text-align:center">
+                                <a href="${url}" download="${fname}" class="btn-action" title="Baixar ${fname}">
+                                    <i class="material-icons">download</i>
+                                </a>
+                            </td>
+                        </tr>`;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    </div>`;
+    setTimeout(iframeUpdateHeight, 300);
+}
+
+async function downloadCompetencia() {
+    const ano = document.getElementById('dl-ano').value;
+    const mes = document.getElementById('dl-mes').value;
+    const fname = `IPSEMG_${mes}_${ano}.csv`;
+    const url   = BASE_URL + fname;
+    // Garante dados em cache e força download
+    mostrarLoading(true, `Preparando ${fname}…`);
+    try {
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error('Não encontrado');
+        const blob = await resp.blob();
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+        a.download = fname; a.click();
+    } catch(e) {
+        alert(`Arquivo ${fname} não encontrado no repositório.`);
+    }
+    mostrarLoading(false);
+}
+
+// ============================================================
+// 10. INICIALIZAÇÃO
+// ============================================================
+document.addEventListener('click', e => {
+    if (!e.target.closest('#colSelectorPopup') && !e.target.closest('.btn-export[onclick*="toggleColSelector"]'))
+        document.querySelectorAll('.column-selector-popup').forEach(p => p.classList.remove('show'));
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await cargaInicial();
+    renderVisaoGeral();
+    renderDownloads();
+
+    document.querySelector('[data-bs-target="#dicionario"]').addEventListener('shown.bs.tab', () => {
+        renderDicionario();
+    });
+    document.querySelector('[data-bs-target="#consulta"]').addEventListener('shown.bs.tab', () => {
+        renderConsulta();
+    });
+    document.querySelector('[data-bs-target="#downloads"]').addEventListener('shown.bs.tab', () => {
+        renderDownloads();
+    });
+
+    document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', () => setTimeout(iframeUpdateHeight, 300));
+    });
+
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+});
+
+// ============================================================
+// 11. IFRAME RESIZE OBSERVER
+// ============================================================
+(function() {
+    let modalAberto = false;
+    function sendHeight() {
+        if (modalAberto) return;
+        const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) + 10;
+        try { if(window.parent&&window.parent!==window) window.parent.postMessage({iframeHeight:h,iframeResize:true,type:'resize'},'*'); } catch(e) {}
+    }
+    document.addEventListener('show.bs.modal',  () => { modalAberto = true; });
+    document.addEventListener('hidden.bs.modal', () => { modalAberto = false; setTimeout(sendHeight, 150); });
+    if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+    else { window.addEventListener('resize', sendHeight); setInterval(sendHeight, 2000); }
+    sendHeight();
+})();
+</script>
+</body>
+</html>
