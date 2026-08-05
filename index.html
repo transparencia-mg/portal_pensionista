@@ -564,32 +564,42 @@ function fecharToast() { document.getElementById('toastSucesso').style.display =
 // 4. DETECÇÃO DO MÊS MAIS ATUAL (GitHub API)
 // ============================================================
 async function setupAtualizacaoData() {
+    // Sonda diretamente o raw.githubusercontent.com (sem limite agressivo de requisições,
+    // ao contrário da api.github.com que estoura fácil com 60 req/hora por IP e derrubava
+    // a detecção automática do mês mais atual).
+    const FALLBACK_YM = '202501'; // último recurso, caso nada seja encontrado
+
     try {
-        const resp = await fetch(GITHUB_API);
-        if (!resp.ok) return;
-        const files = await resp.json();
-        // Padrão: IPSEMG_MM_AAAA.csv
-        const re = /IPSEMG_(\d{2})_(\d{4})\.csv/i;
-        let maxYm = '202001';
-        for (const f of files) {
-            const m = re.exec(f.name);
-            if (m) {
-                const ym = m[2] + m[1]; // YYYYMM
-                if (ym > maxYm) maxYm = ym;
+        const hoje = new Date();
+        let ano = hoje.getFullYear();
+        let mes = hoje.getMonth() + 1; // 1-12
+        let encontrado = null;
+
+        // Tenta do mês atual real para trás, até 36 meses, até achar um arquivo existente
+        for (let tentativas = 0; tentativas < 36; tentativas++) {
+            const ym = String(ano) + String(mes).padStart(2, '0');
+            try {
+                const resp = await fetch(getFileUrl(ym), { method: 'HEAD', cache: 'no-store' });
+                if (resp.ok) { encontrado = ym; break; }
+            } catch (e) {
+                // ignora e tenta o mês anterior
             }
+            mes--;
+            if (mes < 1) { mes = 12; ano--; }
         }
+
+        const maxYm = encontrado || FALLBACK_YM;
         MES_MAIS_ATUAL = maxYm;
-        filtroVisao.ano = maxYm.slice(0,4);
-        filtroVisao.mes = maxYm.slice(4,6);
+        filtroVisao.ano = maxYm.slice(0, 4);
+        filtroVisao.mes = maxYm.slice(4, 6);
         const el = document.getElementById('data-atualizacao-header');
-        if (el) el.textContent = `${nomeMes(maxYm.slice(4,6))}/${maxYm.slice(0,4)}`;
-    } catch(e) {
-        // fallback: usa 2025-01
-        MES_MAIS_ATUAL = '202501';
-        filtroVisao.ano = '2025';
-        filtroVisao.mes = '01';
+        if (el) el.textContent = `${nomeMes(maxYm.slice(4, 6))}/${maxYm.slice(0, 4)}`;
+    } catch (e) {
+        MES_MAIS_ATUAL = FALLBACK_YM;
+        filtroVisao.ano = FALLBACK_YM.slice(0, 4);
+        filtroVisao.mes = FALLBACK_YM.slice(4, 6);
         const el = document.getElementById('data-atualizacao-header');
-        if (el) el.textContent = `Janeiro/2025`;
+        if (el) el.textContent = `${nomeMes(FALLBACK_YM.slice(4, 6))}/${FALLBACK_YM.slice(0, 4)}`;
     }
 }
 
