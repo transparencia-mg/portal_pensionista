@@ -1,6 +1,6 @@
 {
   "version": "4.16.6",
-  "time": 70.777,
+  "time": 80.44,
   "errors": [],
   "tasks": [
     {
@@ -104,7 +104,7 @@
           "rows": 27852
         }
       },
-      "time": 0.865,
+      "time": 0.884,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -233,7 +233,7 @@
           "rows": 29272
         }
       },
-      "time": 0.91,
+      "time": 0.929,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -362,7 +362,7 @@
           "rows": 30985
         }
       },
-      "time": 0.967,
+      "time": 0.987,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -491,7 +491,7 @@
           "rows": 33473
         }
       },
-      "time": 1.054,
+      "time": 1.052,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -620,7 +620,7 @@
           "rows": 34784
         }
       },
-      "time": 1.088,
+      "time": 1.09,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -749,7 +749,136 @@
           "rows": 37443
         }
       },
-      "time": 1.157,
+      "time": 1.171,
+      "scope": [
+        "hash-count-error",
+        "byte-count-error",
+        "field-count-error",
+        "row-count-error",
+        "blank-header",
+        "extra-label",
+        "missing-label",
+        "blank-label",
+        "duplicate-label",
+        "incorrect-label",
+        "blank-row",
+        "primary-key-error",
+        "foreign-key-error",
+        "extra-cell",
+        "missing-cell",
+        "type-error",
+        "constraint-error",
+        "unique-error"
+      ],
+      "partial": false,
+      "errors": [],
+      "stats": {
+        "errors": 0
+      },
+      "valid": true
+    },
+    {
+      "resource": {
+        "description": "Insira a descrição/explicação detalhada deste recurso.",
+        "dialect": {
+          "delimiter": ";"
+        },
+        "encoding": "utf-8-sig",
+        "format": "csv",
+        "hashing": "md5",
+        "name": "ipsemg_01_2026",
+        "path": "data/IPSEMG_01_2026.csv",
+        "profile": "tabular-data-resource",
+        "schema": {
+          "fields": [
+            {
+              "name": "mes",
+              "type": "integer"
+            },
+            {
+              "name": "ano",
+              "type": "integer"
+            },
+            {
+              "name": "reparticao",
+              "type": "string"
+            },
+            {
+              "name": "cargo",
+              "type": "string"
+            },
+            {
+              "name": "tipo_vinculo",
+              "type": "string"
+            },
+            {
+              "name": "dependencia",
+              "type": "string"
+            },
+            {
+              "name": "matric_inst",
+              "type": "integer"
+            },
+            {
+              "name": "instituidor",
+              "type": "string"
+            },
+            {
+              "name": "cpf_instituidor",
+              "type": "string"
+            },
+            {
+              "name": "matric_pens",
+              "type": "integer"
+            },
+            {
+              "name": "pensionista",
+              "type": "string"
+            },
+            {
+              "name": "cpf_pensionista",
+              "type": "string"
+            },
+            {
+              "name": "dat_inicio_direito",
+              "type": "string"
+            },
+            {
+              "name": "data_fim_beneficio",
+              "type": "string"
+            },
+            {
+              "name": "valor_bruto",
+              "type": "string"
+            },
+            {
+              "name": "decimo_terceiro",
+              "type": "any"
+            },
+            {
+              "name": "descontos",
+              "type": "string"
+            },
+            {
+              "name": "valor_liquido",
+              "type": "string"
+            },
+            {
+              "name": "data_nascimento",
+              "type": "string"
+            }
+          ]
+        },
+        "scheme": "file",
+        "title": "Insira um título humanamente legível para este recurso.",
+        "stats": {
+          "hash": "b9a28c9fad72ccebc93b1682dd41253b",
+          "bytes": 9457575,
+          "fields": 19,
+          "rows": 38723
+        }
+      },
+      "time": 1.213,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -878,7 +1007,7 @@
           "rows": 27954
         }
       },
-      "time": 0.892,
+      "time": 0.886,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -1007,7 +1136,7 @@
           "rows": 29091
         }
       },
-      "time": 0.906,
+      "time": 0.932,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -1136,7 +1265,7 @@
           "rows": 31144
         }
       },
-      "time": 0.982,
+      "time": 0.985,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -1265,7 +1394,7 @@
           "rows": 33651
         }
       },
-      "time": 1.037,
+      "time": 1.062,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -1394,7 +1523,7 @@
           "rows": 33448
         }
       },
-      "time": 1.039,
+      "time": 1.07,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -1523,7 +1652,136 @@
           "rows": 37759
         }
       },
-      "time": 1.178,
+      "time": 1.184,
+      "scope": [
+        "hash-count-error",
+        "byte-count-error",
+        "field-count-error",
+        "row-count-error",
+        "blank-header",
+        "extra-label",
+        "missing-label",
+        "blank-label",
+        "duplicate-label",
+        "incorrect-label",
+        "blank-row",
+        "primary-key-error",
+        "foreign-key-error",
+        "extra-cell",
+        "missing-cell",
+        "type-error",
+        "constraint-error",
+        "unique-error"
+      ],
+      "partial": false,
+      "errors": [],
+      "stats": {
+        "errors": 0
+      },
+      "valid": true
+    },
+    {
+      "resource": {
+        "description": "Insira a descrição/explicação detalhada deste recurso.",
+        "dialect": {
+          "delimiter": ";"
+        },
+        "encoding": "utf-8-sig",
+        "format": "csv",
+        "hashing": "md5",
+        "name": "ipsemg_02_2026",
+        "path": "data/IPSEMG_02_2026.csv",
+        "profile": "tabular-data-resource",
+        "schema": {
+          "fields": [
+            {
+              "name": "mes",
+              "type": "integer"
+            },
+            {
+              "name": "ano",
+              "type": "integer"
+            },
+            {
+              "name": "reparticao",
+              "type": "string"
+            },
+            {
+              "name": "cargo",
+              "type": "string"
+            },
+            {
+              "name": "tipo_vinculo",
+              "type": "string"
+            },
+            {
+              "name": "dependencia",
+              "type": "string"
+            },
+            {
+              "name": "matric_inst",
+              "type": "integer"
+            },
+            {
+              "name": "instituidor",
+              "type": "string"
+            },
+            {
+              "name": "cpf_instituidor",
+              "type": "string"
+            },
+            {
+              "name": "matric_pens",
+              "type": "integer"
+            },
+            {
+              "name": "pensionista",
+              "type": "string"
+            },
+            {
+              "name": "cpf_pensionista",
+              "type": "string"
+            },
+            {
+              "name": "dat_inicio_direito",
+              "type": "string"
+            },
+            {
+              "name": "data_fim_beneficio",
+              "type": "string"
+            },
+            {
+              "name": "valor_bruto",
+              "type": "string"
+            },
+            {
+              "name": "decimo_terceiro",
+              "type": "any"
+            },
+            {
+              "name": "descontos",
+              "type": "string"
+            },
+            {
+              "name": "valor_liquido",
+              "type": "string"
+            },
+            {
+              "name": "data_nascimento",
+              "type": "string"
+            }
+          ]
+        },
+        "scheme": "file",
+        "title": "Insira um título humanamente legível para este recurso.",
+        "stats": {
+          "hash": "1aedcb50d155741ec90a1e04ecdcd1ed",
+          "bytes": 9357682,
+          "fields": 19,
+          "rows": 38468
+        }
+      },
+      "time": 1.234,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -1652,7 +1910,7 @@
           "rows": 28126
         }
       },
-      "time": 0.864,
+      "time": 0.887,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -1781,7 +2039,7 @@
           "rows": 29294
         }
       },
-      "time": 0.911,
+      "time": 0.922,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -1910,7 +2168,7 @@
           "rows": 31323
         }
       },
-      "time": 0.977,
+      "time": 1.018,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -2039,7 +2297,7 @@
           "rows": 33291
         }
       },
-      "time": 1.038,
+      "time": 1.051,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -2168,7 +2426,7 @@
           "rows": 34903
         }
       },
-      "time": 1.079,
+      "time": 1.119,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -2297,7 +2555,136 @@
           "rows": 37959
         }
       },
-      "time": 1.168,
+      "time": 1.188,
+      "scope": [
+        "hash-count-error",
+        "byte-count-error",
+        "field-count-error",
+        "row-count-error",
+        "blank-header",
+        "extra-label",
+        "missing-label",
+        "blank-label",
+        "duplicate-label",
+        "incorrect-label",
+        "blank-row",
+        "primary-key-error",
+        "foreign-key-error",
+        "extra-cell",
+        "missing-cell",
+        "type-error",
+        "constraint-error",
+        "unique-error"
+      ],
+      "partial": false,
+      "errors": [],
+      "stats": {
+        "errors": 0
+      },
+      "valid": true
+    },
+    {
+      "resource": {
+        "description": "Insira a descrição/explicação detalhada deste recurso.",
+        "dialect": {
+          "delimiter": ";"
+        },
+        "encoding": "utf-8-sig",
+        "format": "csv",
+        "hashing": "md5",
+        "name": "ipsemg_03_2026",
+        "path": "data/IPSEMG_03_2026.csv",
+        "profile": "tabular-data-resource",
+        "schema": {
+          "fields": [
+            {
+              "name": "mes",
+              "type": "integer"
+            },
+            {
+              "name": "ano",
+              "type": "integer"
+            },
+            {
+              "name": "reparticao",
+              "type": "string"
+            },
+            {
+              "name": "cargo",
+              "type": "string"
+            },
+            {
+              "name": "tipo_vinculo",
+              "type": "string"
+            },
+            {
+              "name": "dependencia",
+              "type": "string"
+            },
+            {
+              "name": "matric_inst",
+              "type": "integer"
+            },
+            {
+              "name": "instituidor",
+              "type": "string"
+            },
+            {
+              "name": "cpf_instituidor",
+              "type": "string"
+            },
+            {
+              "name": "matric_pens",
+              "type": "integer"
+            },
+            {
+              "name": "pensionista",
+              "type": "string"
+            },
+            {
+              "name": "cpf_pensionista",
+              "type": "string"
+            },
+            {
+              "name": "dat_inicio_direito",
+              "type": "string"
+            },
+            {
+              "name": "data_fim_beneficio",
+              "type": "string"
+            },
+            {
+              "name": "valor_bruto",
+              "type": "string"
+            },
+            {
+              "name": "decimo_terceiro",
+              "type": "any"
+            },
+            {
+              "name": "descontos",
+              "type": "string"
+            },
+            {
+              "name": "valor_liquido",
+              "type": "string"
+            },
+            {
+              "name": "data_nascimento",
+              "type": "string"
+            }
+          ]
+        },
+        "scheme": "file",
+        "title": "Insira um título humanamente legível para este recurso.",
+        "stats": {
+          "hash": "feda07b0c43293c04c402d635d5a5c7d",
+          "bytes": 9276733,
+          "fields": 19,
+          "rows": 38451
+        }
+      },
+      "time": 1.219,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -2426,7 +2813,7 @@
           "rows": 28239
         }
       },
-      "time": 0.882,
+      "time": 0.911,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -2555,7 +2942,7 @@
           "rows": 29524
         }
       },
-      "time": 0.912,
+      "time": 0.945,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -2684,7 +3071,7 @@
           "rows": 31493
         }
       },
-      "time": 0.985,
+      "time": 1.004,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -2813,7 +3200,7 @@
           "rows": 33254
         }
       },
-      "time": 1.037,
+      "time": 1.058,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -2942,7 +3329,7 @@
           "rows": 35646
         }
       },
-      "time": 1.121,
+      "time": 1.13,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -3071,7 +3458,136 @@
           "rows": 38191
         }
       },
-      "time": 1.189,
+      "time": 1.239,
+      "scope": [
+        "hash-count-error",
+        "byte-count-error",
+        "field-count-error",
+        "row-count-error",
+        "blank-header",
+        "extra-label",
+        "missing-label",
+        "blank-label",
+        "duplicate-label",
+        "incorrect-label",
+        "blank-row",
+        "primary-key-error",
+        "foreign-key-error",
+        "extra-cell",
+        "missing-cell",
+        "type-error",
+        "constraint-error",
+        "unique-error"
+      ],
+      "partial": false,
+      "errors": [],
+      "stats": {
+        "errors": 0
+      },
+      "valid": true
+    },
+    {
+      "resource": {
+        "description": "Insira a descrição/explicação detalhada deste recurso.",
+        "dialect": {
+          "delimiter": ";"
+        },
+        "encoding": "utf-8-sig",
+        "format": "csv",
+        "hashing": "md5",
+        "name": "ipsemg_04_2026",
+        "path": "data/IPSEMG_04_2026.csv",
+        "profile": "tabular-data-resource",
+        "schema": {
+          "fields": [
+            {
+              "name": "mes",
+              "type": "integer"
+            },
+            {
+              "name": "ano",
+              "type": "integer"
+            },
+            {
+              "name": "reparticao",
+              "type": "string"
+            },
+            {
+              "name": "cargo",
+              "type": "string"
+            },
+            {
+              "name": "tipo_vinculo",
+              "type": "string"
+            },
+            {
+              "name": "dependencia",
+              "type": "string"
+            },
+            {
+              "name": "matric_inst",
+              "type": "integer"
+            },
+            {
+              "name": "instituidor",
+              "type": "string"
+            },
+            {
+              "name": "cpf_instituidor",
+              "type": "string"
+            },
+            {
+              "name": "matric_pens",
+              "type": "integer"
+            },
+            {
+              "name": "pensionista",
+              "type": "string"
+            },
+            {
+              "name": "cpf_pensionista",
+              "type": "string"
+            },
+            {
+              "name": "dat_inicio_direito",
+              "type": "string"
+            },
+            {
+              "name": "data_fim_beneficio",
+              "type": "string"
+            },
+            {
+              "name": "valor_bruto",
+              "type": "string"
+            },
+            {
+              "name": "decimo_terceiro",
+              "type": "any"
+            },
+            {
+              "name": "descontos",
+              "type": "string"
+            },
+            {
+              "name": "valor_liquido",
+              "type": "string"
+            },
+            {
+              "name": "data_nascimento",
+              "type": "string"
+            }
+          ]
+        },
+        "scheme": "file",
+        "title": "Insira um título humanamente legível para este recurso.",
+        "stats": {
+          "hash": "f97e3621a44a7839bdecbf2d893a4ee6",
+          "bytes": 9330454,
+          "fields": 19,
+          "rows": 38351
+        }
+      },
+      "time": 1.218,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -3200,7 +3716,7 @@
           "rows": 28369
         }
       },
-      "time": 0.895,
+      "time": 0.892,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -3329,7 +3845,7 @@
           "rows": 29664
         }
       },
-      "time": 0.926,
+      "time": 0.952,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -3458,7 +3974,7 @@
           "rows": 31685
         }
       },
-      "time": 0.993,
+      "time": 0.999,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -3587,7 +4103,7 @@
           "rows": 34079
         }
       },
-      "time": 1.064,
+      "time": 1.086,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -3716,7 +4232,7 @@
           "rows": 35938
         }
       },
-      "time": 1.157,
+      "time": 1.135,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -3845,7 +4361,7 @@
           "rows": 38391
         }
       },
-      "time": 1.195,
+      "time": 1.215,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -3974,7 +4490,7 @@
           "rows": 28479
         }
       },
-      "time": 0.891,
+      "time": 0.895,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -4103,7 +4619,7 @@
           "rows": 29874
         }
       },
-      "time": 0.936,
+      "time": 0.937,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -4361,7 +4877,7 @@
           "rows": 33809
         }
       },
-      "time": 1.054,
+      "time": 1.066,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -4490,7 +5006,7 @@
           "rows": 36155
         }
       },
-      "time": 1.134,
+      "time": 1.137,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -4619,7 +5135,7 @@
           "rows": 37889
         }
       },
-      "time": 1.202,
+      "time": 1.183,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -4748,7 +5264,7 @@
           "rows": 28616
         }
       },
-      "time": 0.894,
+      "time": 0.908,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -4877,7 +5393,7 @@
           "rows": 29989
         }
       },
-      "time": 0.94,
+      "time": 0.949,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -5006,7 +5522,7 @@
           "rows": 32090
         }
       },
-      "time": 1.005,
+      "time": 1.013,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -5135,7 +5651,7 @@
           "rows": 33885
         }
       },
-      "time": 1.048,
+      "time": 1.07,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -5264,7 +5780,7 @@
           "rows": 36437
         }
       },
-      "time": 1.125,
+      "time": 1.137,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -5393,7 +5909,7 @@
           "rows": 38418
         }
       },
-      "time": 1.199,
+      "time": 1.192,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -5522,7 +6038,7 @@
           "rows": 28721
         }
       },
-      "time": 0.898,
+      "time": 0.9,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -5651,7 +6167,7 @@
           "rows": 30161
         }
       },
-      "time": 0.944,
+      "time": 0.942,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -5780,7 +6296,7 @@
           "rows": 32327
         }
       },
-      "time": 1.002,
+      "time": 1.008,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -5909,7 +6425,7 @@
           "rows": 34048
         }
       },
-      "time": 1.046,
+      "time": 1.068,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -6038,7 +6554,7 @@
           "rows": 36666
         }
       },
-      "time": 1.125,
+      "time": 1.166,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -6167,7 +6683,7 @@
           "rows": 38349
         }
       },
-      "time": 1.171,
+      "time": 1.199,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -6296,7 +6812,7 @@
           "rows": 28863
         }
       },
-      "time": 0.906,
+      "time": 0.902,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -6425,7 +6941,7 @@
           "rows": 30338
         }
       },
-      "time": 0.949,
+      "time": 0.966,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -6554,7 +7070,7 @@
           "rows": 32553
         }
       },
-      "time": 1.02,
+      "time": 1.036,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -6683,7 +7199,7 @@
           "rows": 34350
         }
       },
-      "time": 1.069,
+      "time": 1.075,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -6812,7 +7328,7 @@
           "rows": 36821
         }
       },
-      "time": 1.135,
+      "time": 1.15,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -6941,7 +7457,7 @@
           "rows": 38610
         }
       },
-      "time": 1.188,
+      "time": 1.209,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -7070,7 +7586,7 @@
           "rows": 29020
         }
       },
-      "time": 0.908,
+      "time": 0.918,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -7199,7 +7715,7 @@
           "rows": 30491
         }
       },
-      "time": 0.949,
+      "time": 0.958,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -7328,7 +7844,7 @@
           "rows": 32808
         }
       },
-      "time": 1.03,
+      "time": 1.042,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -7457,7 +7973,7 @@
           "rows": 34520
         }
       },
-      "time": 1.069,
+      "time": 1.085,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -7586,7 +8102,136 @@
           "rows": 37161
         }
       },
-      "time": 1.156,
+      "time": 1.164,
+      "scope": [
+        "hash-count-error",
+        "byte-count-error",
+        "field-count-error",
+        "row-count-error",
+        "blank-header",
+        "extra-label",
+        "missing-label",
+        "blank-label",
+        "duplicate-label",
+        "incorrect-label",
+        "blank-row",
+        "primary-key-error",
+        "foreign-key-error",
+        "extra-cell",
+        "missing-cell",
+        "type-error",
+        "constraint-error",
+        "unique-error"
+      ],
+      "partial": false,
+      "errors": [],
+      "stats": {
+        "errors": 0
+      },
+      "valid": true
+    },
+    {
+      "resource": {
+        "description": "Insira a descrição/explicação detalhada deste recurso.",
+        "dialect": {
+          "delimiter": ";"
+        },
+        "encoding": "utf-8-sig",
+        "format": "csv",
+        "hashing": "md5",
+        "name": "ipsemg_10_2025",
+        "path": "data/IPSEMG_10_2025.csv",
+        "profile": "tabular-data-resource",
+        "schema": {
+          "fields": [
+            {
+              "name": "mes",
+              "type": "integer"
+            },
+            {
+              "name": "ano",
+              "type": "integer"
+            },
+            {
+              "name": "reparticao",
+              "type": "string"
+            },
+            {
+              "name": "cargo",
+              "type": "string"
+            },
+            {
+              "name": "tipo_vinculo",
+              "type": "string"
+            },
+            {
+              "name": "dependencia",
+              "type": "string"
+            },
+            {
+              "name": "matric_inst",
+              "type": "integer"
+            },
+            {
+              "name": "instituidor",
+              "type": "string"
+            },
+            {
+              "name": "cpf_instituidor",
+              "type": "string"
+            },
+            {
+              "name": "matric_pens",
+              "type": "integer"
+            },
+            {
+              "name": "pensionista",
+              "type": "string"
+            },
+            {
+              "name": "cpf_pensionista",
+              "type": "string"
+            },
+            {
+              "name": "dat_inicio_direito",
+              "type": "string"
+            },
+            {
+              "name": "data_fim_beneficio",
+              "type": "string"
+            },
+            {
+              "name": "valor_bruto",
+              "type": "string"
+            },
+            {
+              "name": "decimo_terceiro",
+              "type": "any"
+            },
+            {
+              "name": "descontos",
+              "type": "string"
+            },
+            {
+              "name": "valor_liquido",
+              "type": "string"
+            },
+            {
+              "name": "data_nascimento",
+              "type": "string"
+            }
+          ]
+        },
+        "scheme": "file",
+        "title": "Insira um título humanamente legível para este recurso.",
+        "stats": {
+          "hash": "7c3bfa9c1a479efac4351e2922f924bb",
+          "bytes": 9451573,
+          "fields": 19,
+          "rows": 38687
+        }
+      },
+      "time": 1.236,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -7715,7 +8360,7 @@
           "rows": 29111
         }
       },
-      "time": 0.915,
+      "time": 0.911,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -7844,7 +8489,7 @@
           "rows": 30676
         }
       },
-      "time": 0.965,
+      "time": 0.961,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -7973,7 +8618,7 @@
           "rows": 33130
         }
       },
-      "time": 1.033,
+      "time": 1.032,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -8102,7 +8747,7 @@
           "rows": 34697
         }
       },
-      "time": 1.074,
+      "time": 1.114,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -8231,7 +8876,136 @@
           "rows": 37109
         }
       },
-      "time": 1.146,
+      "time": 1.199,
+      "scope": [
+        "hash-count-error",
+        "byte-count-error",
+        "field-count-error",
+        "row-count-error",
+        "blank-header",
+        "extra-label",
+        "missing-label",
+        "blank-label",
+        "duplicate-label",
+        "incorrect-label",
+        "blank-row",
+        "primary-key-error",
+        "foreign-key-error",
+        "extra-cell",
+        "missing-cell",
+        "type-error",
+        "constraint-error",
+        "unique-error"
+      ],
+      "partial": false,
+      "errors": [],
+      "stats": {
+        "errors": 0
+      },
+      "valid": true
+    },
+    {
+      "resource": {
+        "description": "Insira a descrição/explicação detalhada deste recurso.",
+        "dialect": {
+          "delimiter": ";"
+        },
+        "encoding": "utf-8-sig",
+        "format": "csv",
+        "hashing": "md5",
+        "name": "ipsemg_11_2025",
+        "path": "data/IPSEMG_11_2025.csv",
+        "profile": "tabular-data-resource",
+        "schema": {
+          "fields": [
+            {
+              "name": "mes",
+              "type": "integer"
+            },
+            {
+              "name": "ano",
+              "type": "integer"
+            },
+            {
+              "name": "reparticao",
+              "type": "string"
+            },
+            {
+              "name": "cargo",
+              "type": "string"
+            },
+            {
+              "name": "tipo_vinculo",
+              "type": "string"
+            },
+            {
+              "name": "dependencia",
+              "type": "string"
+            },
+            {
+              "name": "matric_inst",
+              "type": "integer"
+            },
+            {
+              "name": "instituidor",
+              "type": "string"
+            },
+            {
+              "name": "cpf_instituidor",
+              "type": "string"
+            },
+            {
+              "name": "matric_pens",
+              "type": "integer"
+            },
+            {
+              "name": "pensionista",
+              "type": "string"
+            },
+            {
+              "name": "cpf_pensionista",
+              "type": "string"
+            },
+            {
+              "name": "dat_inicio_direito",
+              "type": "string"
+            },
+            {
+              "name": "data_fim_beneficio",
+              "type": "string"
+            },
+            {
+              "name": "valor_bruto",
+              "type": "string"
+            },
+            {
+              "name": "decimo_terceiro",
+              "type": "any"
+            },
+            {
+              "name": "descontos",
+              "type": "string"
+            },
+            {
+              "name": "valor_liquido",
+              "type": "string"
+            },
+            {
+              "name": "data_nascimento",
+              "type": "string"
+            }
+          ]
+        },
+        "scheme": "file",
+        "title": "Insira um título humanamente legível para este recurso.",
+        "stats": {
+          "hash": "1be69fefb8ce6f705e6e9ed21e607c31",
+          "bytes": 9444257,
+          "fields": 19,
+          "rows": 38661
+        }
+      },
+      "time": 1.214,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -8360,7 +9134,7 @@
           "rows": 0
         }
       },
-      "time": 0.125,
+      "time": 0.114,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -47490,7 +48264,7 @@
           "rows": 30757
         }
       },
-      "time": 0.959,
+      "time": 0.96,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -47619,7 +48393,7 @@
           "rows": 33225
         }
       },
-      "time": 1.03,
+      "time": 1.044,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -47748,7 +48522,7 @@
           "rows": 34807
         }
       },
-      "time": 1.079,
+      "time": 1.1,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -47877,7 +48651,136 @@
           "rows": 37272
         }
       },
-      "time": 1.17,
+      "time": 1.172,
+      "scope": [
+        "hash-count-error",
+        "byte-count-error",
+        "field-count-error",
+        "row-count-error",
+        "blank-header",
+        "extra-label",
+        "missing-label",
+        "blank-label",
+        "duplicate-label",
+        "incorrect-label",
+        "blank-row",
+        "primary-key-error",
+        "foreign-key-error",
+        "extra-cell",
+        "missing-cell",
+        "type-error",
+        "constraint-error",
+        "unique-error"
+      ],
+      "partial": false,
+      "errors": [],
+      "stats": {
+        "errors": 0
+      },
+      "valid": true
+    },
+    {
+      "resource": {
+        "description": "Insira a descrição/explicação detalhada deste recurso.",
+        "dialect": {
+          "delimiter": ";"
+        },
+        "encoding": "utf-8-sig",
+        "format": "csv",
+        "hashing": "md5",
+        "name": "ipsemg_12_2025",
+        "path": "data/IPSEMG_12_2025.csv",
+        "profile": "tabular-data-resource",
+        "schema": {
+          "fields": [
+            {
+              "name": "mes",
+              "type": "integer"
+            },
+            {
+              "name": "ano",
+              "type": "integer"
+            },
+            {
+              "name": "reparticao",
+              "type": "string"
+            },
+            {
+              "name": "cargo",
+              "type": "string"
+            },
+            {
+              "name": "tipo_vinculo",
+              "type": "string"
+            },
+            {
+              "name": "dependencia",
+              "type": "string"
+            },
+            {
+              "name": "matric_inst",
+              "type": "integer"
+            },
+            {
+              "name": "instituidor",
+              "type": "string"
+            },
+            {
+              "name": "cpf_instituidor",
+              "type": "string"
+            },
+            {
+              "name": "matric_pens",
+              "type": "integer"
+            },
+            {
+              "name": "pensionista",
+              "type": "string"
+            },
+            {
+              "name": "cpf_pensionista",
+              "type": "string"
+            },
+            {
+              "name": "dat_inicio_direito",
+              "type": "string"
+            },
+            {
+              "name": "data_fim_beneficio",
+              "type": "string"
+            },
+            {
+              "name": "valor_bruto",
+              "type": "string"
+            },
+            {
+              "name": "decimo_terceiro",
+              "type": "any"
+            },
+            {
+              "name": "descontos",
+              "type": "string"
+            },
+            {
+              "name": "valor_liquido",
+              "type": "string"
+            },
+            {
+              "name": "data_nascimento",
+              "type": "string"
+            }
+          ]
+        },
+        "scheme": "file",
+        "title": "Insira um título humanamente legível para este recurso.",
+        "stats": {
+          "hash": "b9a28c9fad72ccebc93b1682dd41253b",
+          "bytes": 9457575,
+          "fields": 19,
+          "rows": 38723
+        }
+      },
+      "time": 1.226,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -47908,7 +48811,7 @@
   ],
   "stats": {
     "errors": 1000,
-    "tasks": 69
+    "tasks": 76
   },
   "valid": false
 }
